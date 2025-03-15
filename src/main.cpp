@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   switch (inputTokens.whichAction()) {
     case query::JUDGE:{
       Tester runBin (argc, argv, curdir);
-      runBin.passVerdict();
+      runBin.judge();
     }
     case query::INIT: {
       Init create (argc, argv, curdir);

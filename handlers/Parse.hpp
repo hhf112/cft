@@ -10,7 +10,6 @@ class Parse {
  private:
   query action;
 
-  std::array<std::string, query::COUNT> tokens {"config", "judge", "init"};
 
  public:
   Parse(int argc, char* argv[]) {
