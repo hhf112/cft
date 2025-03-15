@@ -4,7 +4,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <wait.h>
-
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
@@ -90,7 +89,7 @@ class Tester {
     std::string buf;
 
     std::cerr << BRIGHT_YELLOW_FG << "Judging...\n"
-              << COLOR_END;  // 93 : Bright yellow
+              << COLOR_END;  
     while (std::getline(output, buf)) {
       compare += buf + '\n';
       if (!std::getline(actualOutput, buf)) {
@@ -108,11 +107,11 @@ class Tester {
           result = status::WA;
           failcnt++;
           report << "FAILED\n\n";
-          std::cerr << "\033[31mfailed\033[0m\n";  // 31 : Bright red
+          std::cerr << "\033[31mfailed\033[0m\n";  
           std::cerr << RED_FG << "failed\n" << COLOR_END;
         } else {
           std::cerr << GREEN_FG << "passed\n"
-                    << COLOR_END;  // 92 : Bright green
+                    << COLOR_END;  
         }
         compare = "";
         actual = "";
@@ -150,7 +149,7 @@ class Tester {
         break;
 
       case status::NILIO:
-        std::cout << WHITE_ON_CYAN << "I/O empty.\n" << COLOR_END;  // 46 : cyan
+        std::cout << WHITE_ON_CYAN << "I/O empty.\n" << COLOR_END;  
         break;
 
       case status::RUNTIME_ERR:
@@ -172,7 +171,6 @@ class Tester {
     report << "runtime: " << runtime << " ms.\n";
     std::cout << "runtime: " << runtime << " ms.\n";
 
-    // remmeber to color and add.
     switch (timeLimit) {
       case warning::TLE:
         std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|\n" << COLOR_END;
