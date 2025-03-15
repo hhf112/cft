@@ -13,15 +13,15 @@ int main(int argc, char* argv[]) {
   Parse inputTokens(argc, argv);
 
   switch (inputTokens.whichAction()) {
-    case query::judge:{
+    case query::JUDGE:{
       Tester runBin (argc, argv, curdir);
-      runBin.judge();
+      runBin.passVerdict();
     }
-    case query::init: {
+    case query::INIT: {
       Init create (argc, argv, curdir);
       create.queryCleanup();
     }
-    case query::config: {
+    case query::CONFIG: {
 
     }
     default:

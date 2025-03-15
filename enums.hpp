@@ -1,9 +1,11 @@
 #pragma once
 
-enum class query {
-  config,
-  init,
-  judge,
+enum  query {
+  CONFIG,
+  JUDGE,
+  INIT,
+  COUNT,
+  
 };
 
 
@@ -13,4 +15,10 @@ enum class status {
   WA,
   NILIO,
   UNKNOWN,
+  PROCESSING_ERR,
+};
+
+enum class warning {
+  TLE, 
+  GOOD,
 };
