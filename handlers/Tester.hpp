@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <wait.h>
+
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
@@ -30,10 +31,8 @@ class Tester {
 
   bool testCompleteOne() { return ++cnt % lpTestcase != 0; }
 
-  //Possible unkonwn result, only to be used after tests have been run.
-  status resultMU() { 
-    return result;
-  }
+  // Possible unkonwn result, only to be used after tests have been run.
+  status resultMU() { return result; }
 
  public:
   Tester(int argc, char* argv[], const std::string& curdir) {
@@ -66,70 +65,11 @@ class Tester {
                   .count();
 
     if (runtime > 1) timeLimit = warning::TLE;
-
-  }
-
-  std::optional<status> runTests(std::ofstream& report) {
-    if (!report) 
-      return {};
-    // files
-    std::ifstream output{filename + "/out.txt", std::ios::out};
-    std::ifstream actualOutput{filename + "/output.txt", std::ios::out};
-
-    if (!(output && actualOutput)) {
-      return {};
-    }
-
-    if (output.eof()) {
-      return result = status::NILIO;
-    }
-
-    std::string compare;
-    std::string actual;
-    std::string buf;
-
-    std::cerr << BRIGHT_YELLOW_FG << "Judging...\n"
-              << COLOR_END;  
-    while (std::getline(output, buf)) {
-      compare += buf + '\n';
-      if (!std::getline(actualOutput, buf)) {
-        return result = status::RUNTIME_ERR;
-      }
-      actual += buf + '\n';
-
-      if (testCompleteOne()) {
-        ++testcnt;
-        report << compare;
-        report << "->\n" << actual << '\n';
-
-        std::cout << "test " << testcnt << ": ";
-        if (compare != actual) {
-          result = status::WA;
-          failcnt++;
-          report << "FAILED\n\n";
-          std::cerr << "\033[31mfailed\033[0m\n";  
-          std::cerr << RED_FG << "failed\n" << COLOR_END;
-        } else {
-          std::cerr << GREEN_FG << "passed\n"
-                    << COLOR_END;  
-        }
-        compare = "";
-        actual = "";
-      }
-    }
-
-    output.close();
-    actualOutput.close();
-
-    if (result == status::UNKNOWN) return result = status::AC;
-
-    return result;
   }
 
   void judge() {
     std::ofstream report{filename + "/report.txt", std::ios::out};
-    if (!runTests(report))
-      result = status::PROCESSING_ERR;
+    if (!runTests(report)) result = status::PROCESSING_ERR;
 
     // FINAL VERDICT
     report << "FINAL VERDICT: \n";
@@ -171,6 +111,7 @@ class Tester {
     report << "runtime: " << runtime << " ms.\n";
     std::cout << "runtime: " << runtime << " ms.\n";
 
+    // remmeber to color and add.
     switch (timeLimit) {
       case warning::TLE:
         std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|\n" << COLOR_END;
@@ -182,5 +123,60 @@ class Tester {
     }
 
     report.close();
+  }
+
+  std::optional<status> runTests(std::ofstream& report) {
+    if (!report) return {};
+    // files
+    std::ifstream output{filename + "/out.txt", std::ios::out};
+    std::ifstream actualOutput{filename + "/output.txt", std::ios::out};
+
+    if (!(output && actualOutput)) {
+      return {};
+    }
+
+    if (output.eof()) {
+      return result = status::NILIO;
+    }
+
+    std::string compare;
+    std::string actual;
+    std::string buf;
+
+    std::cerr << BRIGHT_YELLOW_FG << "Judging...\n" << COLOR_END;
+    while (std::getline(output, buf)) {
+      compare += buf + '\n';
+      if (!std::getline(actualOutput, buf)) {
+        return result = status::RUNTIME_ERR;
+      }
+      actual += buf + '\n';
+
+      if (testCompleteOne()) {
+        ++testcnt;
+        report << compare;
+        report << "->\n" << actual << '\n';
+
+        std::cout << "test " << testcnt << ": ";
+        if (compare != actual) {
+          result = status::WA;
+          failcnt++;
+          report << "FAILED\n\n";
+          std::cerr << "\033[31mfailed\033[0m\n";
+          std::cerr << RED_FG << "failed\n" << COLOR_END;
+        } else {
+          std::cerr << GREEN_FG << "passed\n"
+                    << COLOR_END;  
+        }
+        compare = "";
+        actual = "";
+      }
+    }
+
+    output.close();
+    actualOutput.close();
+
+    if (result == status::UNKNOWN) return result = status::AC;
+
+    return result;
   }
 };
