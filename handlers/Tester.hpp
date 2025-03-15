@@ -91,17 +91,21 @@ class Tester {
     // runtime
     auto start = std::chrono::high_resolution_clock::now();
 
-    pid_t testid = fork ();
-    if (testid == 0) {
+    pid_t testid = fork();
+    if (testid < 0) {
+      std::cerr<<"Failed to fork child process\n";
+    }
+    else if (testid == 0) {
       char* args[] = {filename.data(), nullptr};
-      execvp (filename.data(), args);
+      execvp(filename.data(), args);
 
       perror("Failed to spwan child proccess to run the main file\n");
-    }
-    else {
+      exit(1);
+    } else {
       int status;
-      if (wait (&status) < 0) {
-        perror ("Waiting on child proccess failed\n");
+      if (wait(&status) < 0) {
+        perror("Waiting on child proccess failed\n");
+        exit(1);
       }
     }
 
@@ -110,11 +114,11 @@ class Tester {
                   .count();
 
     if (runtime > 1) timeLimit = warning::TLE;
+
+    runTests();
   }
 
   void passVerdict() {
-    runTests();
-
     std::ofstream report{filename + "/report.txt", std::ios::out};
 
     // FINAL VERDICT
