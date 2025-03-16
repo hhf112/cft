@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 
+
+#include "../ansi_macros.hpp"
+
 class Init {
  private:
   int files = 1;
@@ -13,7 +16,6 @@ class Init {
   const std::string curdir;
   std::string cleanfs;
   std::string templ;
-
 
  public:
   Init(int argc, char* argv[], const std::string& cwd) : curdir{cwd} {
@@ -36,8 +38,7 @@ class Init {
     // load template.
     std::filesystem::path binpath =
         std::filesystem::canonical("/proc/self/exe");
-    templ = 
-        binpath.parent_path() / "/template.txt";
+    templ = binpath.parent_path() / "/template.txt";
 
     std::ifstream templateF{templ, std::ios::in};
     if (!templateF) {
@@ -46,21 +47,32 @@ class Init {
     }
   }
 
-  int createFiles() {
+  inline int createFiles() {
     cleanfs += "rm ";
+
+    std::ifstream templateStream{templ, std::ios::in};
+    if (!templateStream) {
+      std::cerr << "ERR: Failed to load template \n";
+      return 1;
+    }
+
     for (char i = 'a'; i < files; i++) {
       std::string num;
       num += curdir + "/" + i + ".cpp";
       cleanfs += num + " " + i + " ";
 
       std::ofstream f{num, std::ios::out};
-      f << templ;
+      if (!f) {
+        std::cerr << "ERR: Failed to create specified count of files. \n";
+        return 1;
+      }
+      // f << templ;
     }
 
     return 0;
   }
 
-  bool queryCleanup() {
+  inline int queryCleanup() {
     std::ofstream clean{curdir + "/cl", std::ios::out};
     if (!clean) {
       std::cerr << "Could not create cleaning logs\n";
@@ -71,6 +83,4 @@ class Init {
 
     return 0;
   }
-
-  int updateTemplate() { return 0; }
 };

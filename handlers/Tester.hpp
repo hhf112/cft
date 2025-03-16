@@ -22,7 +22,7 @@
 class Tester {
  private:
   int lpTestcase = 1;  // Lines per testcase.
-  std::optional<int> runtime = 0;
+  std::optional<int> runtime;
   int cnt = 0;
   int failcnt = 0;
   int testcnt = 0;
@@ -43,7 +43,7 @@ class Tester {
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
   }
 
-  std::optional<status> loadBin() {
+  inline std::optional<status> loadBin() {
     // runtime
     pid_t binID;
     char* args[] = {filename.data(), nullptr};
@@ -72,7 +72,7 @@ class Tester {
     return {};
   }
 
-  void judge() {
+  inline void judge() {
     std::ofstream report{filename + "/report.txt", std::ios::out};
     if (!runTests(report)) result = status::PROCESSING_ERR;
 
@@ -135,7 +135,7 @@ class Tester {
     report.close();
   }
 
-  std::optional<status> runTests(std::ofstream& report) {
+  inline std::optional<status> runTests(std::ofstream& report) {
     if (!report) return {};
     // files
     std::ifstream output{filename + "/out.txt", std::ios::out};
@@ -175,8 +175,8 @@ class Tester {
         } else {
           std::cerr << GREEN_FG << "passed\n" << COLOR_END;
         }
-        compare = "";
-        actual = "";
+        compare.clear();
+        actual.clear();
       }
     }
 

@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../enums.hpp"
+#include "../ansi_macros.hpp"
 
 class Parse {
  private:
@@ -17,11 +18,11 @@ class Parse {
       case 2:
       case 3:
       default:
-        std::cout << "\033[97;42mAll tests passed!\033[0m\n verdict: You are "
-                     "diagnosed with retard! :D \n";
+        std::cout << WHITE_ON_GREEN << "All tests passed!\n" COLOR_END;
+        std::cout<< "verdict: You are diagnosed with retard! :D \n";
         exit(1);
     }
   }
 
-  query whichAction() { return action; }
+  inline query whichAction() { return action; }
 };
