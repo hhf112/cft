@@ -12,6 +12,7 @@ enum  query {
 enum class status {
   AC,
   RUNTIME_ERR,
+  WRONG_OUTPUT,
   WA,
   NILIO,
   UNKNOWN,

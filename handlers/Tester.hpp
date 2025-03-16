@@ -1,6 +1,7 @@
 #pragma once
 
 #include <signal.h>
+#include <spawn.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -40,40 +41,35 @@ class Tester {
   Tester(int argc, char* argv[], const std::string& curdir) {
     filename = curdir + "/" + argv[1];
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
+  }
 
+  std::optional<status> loadBin() {
     // runtime
+    pid_t binID;
+    char* args[] = {filename.data(), nullptr};
+    if (posix_spawn(&binID, filename.c_str(), NULL, NULL, args, NULL) != 0) {
+      perror("posix failed");
+      return status::PROCESSING_ERR;
+    }
     auto start = std::chrono::high_resolution_clock::now();
 
-    pid_t testid = fork();
-
     int binStatus;
-    if (testid < 0) {
-      std::cerr << "Failed to run program as a child process\n";
-      exit(1);
-    } else if (testid == 0) {
-      char* args[] = {filename.data(), nullptr};
-      execvp(filename.data(), args);
-
-      perror("Failed to spawan child proccess");
-      exit(1);
-    } else {
-      if (waitpid(testid, &binStatus, 0) < 0) {
-        perror("Failed to wait on binary");
-        exit(1);
-      }
+    if (waitpid(binID, &binStatus, 0) < 0) {
+      perror("wait failed");
+      return status::PROCESSING_ERR;
     }
-
     auto end = std::chrono::high_resolution_clock::now();
 
-    if (!WIFEXITED(binStatus)) {
-      std::cerr << filename << " Terminated abonrmally\n";
-      exit(1);
+    if (WIFEXITED(binStatus)) {
+      return status::RUNTIME_ERR;
     }
 
     runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                   .count();
 
-    if (runtime >= 100) timeLimit = warning::TLE;
+    if (runtime >= 90) timeLimit = warning::TLE;
+
+    return {};
   }
 
   void judge() {
@@ -93,7 +89,7 @@ class Tester {
       case status::WA:
         std::cout << WHITE_ON_RED << "Wrong Answer\n" << COLOR_END;
         report << "WRONG ANSWER\n";
-        std::cout << "verdict: unexpected output.\n";
+        std::cout << "verdict: test failed.\n";
         std::cout << failcnt << " test(s) failed\n";
         break;
 
@@ -101,9 +97,9 @@ class Tester {
         std::cout << WHITE_ON_CYAN << "I/O empty.\n" << COLOR_END;
         break;
 
-      case status::RUNTIME_ERR:
-        std::cout << BLACK_ON_WHITE << "Runtime Error\n" << COLOR_END;
-        report << "Runtime error encountered, test terminated.\n";
+      case status::WRONG_OUTPUT:
+        std::cout << BLACK_ON_WHITE << "WRONG OUTPUT\n" << COLOR_END;
+        report << "verdict: Invalid handling of input, tests terminated.\n";
         std::cout
             << "verdict: output length doesn't match expected length, test "
                "terminated.\n";
@@ -118,11 +114,12 @@ class Tester {
     }
 
     if (!runtime) {
-      std::cerr << "Runtime evaluation failed!! \n";
-    } else {
-      report << "runtime: " << runtime.value() << " ms.\n";
-      std::cout << "runtime: " << runtime.value() << " ms.\n";
+      std::cerr << "Runtime not evaluated due to invalid binary run. \n";
+      return;
     }
+
+    report << "runtime: " << runtime.value() << " ms.\n";
+    std::cout << "runtime: " << runtime.value() << " ms.\n";
 
     // remmeber to color and add.
     switch (timeLimit) {
@@ -160,7 +157,7 @@ class Tester {
     while (std::getline(output, buf)) {
       compare += buf + '\n';
       if (!std::getline(actualOutput, buf)) {
-        return result = status::RUNTIME_ERR;
+        return result = status::WRONG_OUTPUT;
       }
       actual += buf + '\n';
 
@@ -181,6 +178,10 @@ class Tester {
         compare = "";
         actual = "";
       }
+    }
+
+    if (!actualOutput.eof()) {
+      return result = status::WRONG_OUTPUT;
     }
 
     output.close();
