@@ -4,6 +4,8 @@
 
 #define RED_FG "\033[31m"
 
+#define CYAN_FG "\033[36m"
+
 #define GREEN_FG "\033[92m"
 
 #define BRIGHT_YELLOW_FG "\033[93m"

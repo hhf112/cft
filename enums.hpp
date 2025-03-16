@@ -1,7 +1,6 @@
 #pragma once
 
 enum  query {
-  CONFIG,
   JUDGE,
   INIT,
   COUNT,

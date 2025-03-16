@@ -7,14 +7,11 @@
 #include <unistd.h>
 
 #include <chrono>
-#include <csignal>
 #include <cstdlib>
-#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <optional>
 #include <string>
-#include <thread>
 
 #include "../ansi_macros.hpp"
 #include "../enums.hpp"
@@ -23,7 +20,7 @@ class Tester {
  private:
   int lpTestcase = 1;  // Lines per testcase.
   std::optional<int> runtime;
-  int cnt = 0;
+  int cnt = 0; // Total number of lines in expected output.
   int failcnt = 0;
   int testcnt = 0;
 
@@ -67,12 +64,12 @@ class Tester {
     runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                   .count();
 
-    if (runtime >= 90) timeLimit = warning::TLE;
+    if (runtime >= 150) timeLimit = warning::TLE;
 
     return {};
   }
 
-  inline void judge() {
+  inline int judge() {
     std::ofstream report{filename + "/report.txt", std::ios::out};
     if (!runTests(report)) result = status::PROCESSING_ERR;
 
@@ -110,18 +107,18 @@ class Tester {
         std::cout << "Unable to fetch required files.\n";
 
       default:
+      std::cout << BLACK_ON_WHITE << "Unknown error occured ...\n" << COLOR_END;
         //
     }
 
     if (!runtime) {
       std::cerr << "Runtime not evaluated due to invalid binary run. \n";
-      return;
+      return 1;
     }
 
     report << "runtime: " << runtime.value() << " ms.\n";
     std::cout << "runtime: " << runtime.value() << " ms.\n";
 
-    // remmeber to color and add.
     switch (timeLimit) {
       case warning::TLE:
         std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|\n" << COLOR_END;
@@ -131,10 +128,13 @@ class Tester {
                   << COLOR_END;
         break;
       default:
+      std::cout << BLACK_ON_WHITE << "Unknown error occured ... k:[\n"  << COLOR_END;
+      return 1;
         //
     }
 
     report.close();
+    return 0;
   }
 
   inline std::optional<status> runTests(std::ofstream& report) {

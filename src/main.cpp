@@ -1,10 +1,13 @@
+#include <iostream>
 #include <filesystem>
 // ^ implied future windows adpation
 
 #include <iostream>
 
 #include "../enums.hpp"
-#include "../handlers/Handlers.hpp"
+#include "../ansi_macros.hpp"
+
+#include "../tooling/tools.hpp"
 
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path();
@@ -30,7 +33,7 @@ int main(int argc, char* argv[]) {
         case status::RUNTIME_ERR:
           std::cout << WHITE_ON_RED << "Runtime Error\n" << COLOR_END;
           std::cerr
-              << "Inputted binary Exited abnomrally, tests cannot be done\n";
+              << "Inputted binary exited abnomrally, tests cannot be done\n";
           return 1;
         default:
           //

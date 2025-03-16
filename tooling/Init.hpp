@@ -11,7 +11,7 @@
 class Init {
  private:
   int files = 1;
-  int status = 1;
+  int status = 0;
 
   const std::string curdir;
   std::string cleanfs;
@@ -19,6 +19,7 @@ class Init {
 
  public:
   Init(int argc, char* argv[], const std::string& cwd) : curdir{cwd} {
+    std::cout << CYAN_FG << "Flushing IO files ...\n" << COLOR_END;
     // clear IO files.
     {
       std::ofstream c1{curdir + "/input.txt", std::ios::out};
@@ -27,7 +28,8 @@ class Init {
       std::ofstream c4{curdir + "/report.txt", std::ios::out};
 
       if (!(c1 && c2 && c4 && c4)) {
-        status = 0;
+        status = 1;
+        std::cerr << RED_FG << "Unsuccessfull\n" << COLOR_END;
         return;
       }
     }
@@ -40,9 +42,10 @@ class Init {
         std::filesystem::canonical("/proc/self/exe");
     templ = binpath.parent_path() / "/template.txt";
 
+    std::cout << CYAN_FG << "Loading template\n" << COLOR_END;
     std::ifstream templateF{templ, std::ios::in};
     if (!templateF) {
-      std::cerr << "Template not found!\n";
+      std::cerr << RED_FG << "Template not found!\n" << COLOR_END;
       return;
     }
   }
@@ -63,7 +66,7 @@ class Init {
 
       std::ofstream f{num, std::ios::out};
       if (!f) {
-        std::cerr << "ERR: Failed to create specified count of files. \n";
+        std::cerr << RED_FG <<  "ERR: Failed to create specified count of files. \n" << COLOR_END;
         return 1;
       }
       // f << templ;
@@ -80,6 +83,11 @@ class Init {
     }
     clean << cleanfs;
     clean.close();
+
+    return 0;
+  }
+
+  inline int configTempl(){
 
     return 0;
   }
