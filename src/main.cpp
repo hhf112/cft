@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
   switch (inputTokens.whichAction()) {
     case query::JUDGE: {
       Tester cftester(argc, argv, curdir);
-      std::optional<status> failedrun = cftester.loadBin().value();
+      std::optional<status> failedrun = cftester.loadBin();
 
       if (!failedrun) {
         cftester.judge();
