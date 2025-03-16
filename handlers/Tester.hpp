@@ -1,17 +1,19 @@
 #pragma once
 
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <wait.h>
 
 #include <chrono>
+#include <csignal>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <optional>
 #include <string>
+#include <thread>
 
 #include "../ansi_macros.hpp"
 #include "../enums.hpp"
@@ -19,7 +21,7 @@
 class Tester {
  private:
   int lpTestcase = 1;  // Lines per testcase.
-  int runtime = 0;
+  std::optional<int> runtime = 0;
   int cnt = 0;
   int failcnt = 0;
   int testcnt = 0;
@@ -43,6 +45,8 @@ class Tester {
     auto start = std::chrono::high_resolution_clock::now();
 
     pid_t testid = fork();
+
+    int binStatus;
     if (testid < 0) {
       std::cerr << "Failed to run program as a child process\n";
       exit(1);
@@ -50,21 +54,26 @@ class Tester {
       char* args[] = {filename.data(), nullptr};
       execvp(filename.data(), args);
 
-      perror("Failed to spawn child proccess to run the main file");
+      perror("Failed to spawan child proccess");
       exit(1);
     } else {
-      int status;
-      if (wait(&status) < 0) {
-        perror("Waiting on child proccess failed\n");
+      if (waitpid(testid, &binStatus, 0) < 0) {
+        perror("Failed to wait on binary");
         exit(1);
       }
     }
 
     auto end = std::chrono::high_resolution_clock::now();
+
+    if (!WIFEXITED(binStatus)) {
+      std::cerr << filename << " Terminated abonrmally\n";
+      exit(1);
+    }
+
     runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                   .count();
 
-    if (runtime > 1) timeLimit = warning::TLE;
+    if (runtime >= 100) timeLimit = warning::TLE;
   }
 
   void judge() {
@@ -89,7 +98,7 @@ class Tester {
         break;
 
       case status::NILIO:
-        std::cout << WHITE_ON_CYAN << "I/O empty.\n" << COLOR_END;  
+        std::cout << WHITE_ON_CYAN << "I/O empty.\n" << COLOR_END;
         break;
 
       case status::RUNTIME_ERR:
@@ -108,8 +117,12 @@ class Tester {
         //
     }
 
-    report << "runtime: " << runtime << " ms.\n";
-    std::cout << "runtime: " << runtime << " ms.\n";
+    if (!runtime) {
+      std::cerr << "Runtime evaluation failed!! \n";
+    } else {
+      report << "runtime: " << runtime.value() << " ms.\n";
+      std::cout << "runtime: " << runtime.value() << " ms.\n";
+    }
 
     // remmeber to color and add.
     switch (timeLimit) {
@@ -161,11 +174,9 @@ class Tester {
           result = status::WA;
           failcnt++;
           report << "FAILED\n\n";
-          std::cerr << "\033[31mfailed\033[0m\n";
           std::cerr << RED_FG << "failed\n" << COLOR_END;
         } else {
-          std::cerr << GREEN_FG << "passed\n"
-                    << COLOR_END;  
+          std::cerr << GREEN_FG << "passed\n" << COLOR_END;
         }
         compare = "";
         actual = "";

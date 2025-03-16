@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -7,71 +8,60 @@
 class Init {
  private:
   int files = 1;
-  std::string buf;
-  std::string open;
-  std::string cleanfs;
+  int status = 1;
+
   const std::string curdir;
+  std::string cleanfs;
+  std::string templ;
+
 
  public:
-  Init(int argc, char* argv[], const std::string& cwd) : curdir {cwd} {
+  Init(int argc, char* argv[], const std::string& cwd) : curdir{cwd} {
     // clear IO files.
-    system("sh cl");
-
     {
       std::ofstream c1{curdir + "/input.txt", std::ios::out};
       std::ofstream c2{curdir + "/output.txt", std::ios::out};
-      std::ofstream c4{curdir + "/out.txt", std::ios::out};
-      std::ofstream c5{curdir + "/report.txt", std::ios::out};
+      std::ofstream c3{curdir + "/out.txt", std::ios::out};
+      std::ofstream c4{curdir + "/report.txt", std::ios::out};
+
+      if (!(c1 && c2 && c4 && c4)) {
+        status = 0;
+        return;
+      }
     }
 
     // no of problem statements in the contest.
-    files = (argc > 2 ? std::max(argv[2][0] - '0', 1) : 1);
+    files = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
+    //
+    // load template.
+    std::filesystem::path binpath =
+        std::filesystem::canonical("/proc/self/exe");
+    templ = 
+        binpath.parent_path() / "/template.txt";
 
-    buf = R"( #include <bits/stdc++.h>
-using LL = long long int;
-using namespace std;
-#define fast                   \
-  ios::sync_with_stdio(false); \
-  cin.tie(0);                  \
-  cout.tie(0);
-
-#define N 100000
-#define inf INT_MAX
-#define ninf INT_MIN
-#define pb push_back()
-
-inline void solve() {
-
-}
-
-int main() {
-#ifndef ONLINE_JUDGE
-  freopen("input.txt", "r", stdin);
-  freopen("output.txt", "w", stdout);
-#endif
-
-  fast int nt = 0;
-  cin >> nt;
-  while (nt--) {
-    solve();
-  }
-
-  return 0;
-})";
-
-    cleanfs += "rm ";
-    for (int i = 0; i < files; i++) {
-      std::string num;
-      num += curdir + "/" + char(i + 'a') + ".cpp";
-      cleanfs += num + " " + char(i + 'a') + " ";
-
-      std::ofstream f{num, std::ios::out};
-      f << buf;
+    std::ifstream templateF{templ, std::ios::in};
+    if (!templateF) {
+      std::cerr << "Template not found!\n";
+      return;
     }
   }
 
+  int createFiles() {
+    cleanfs += "rm ";
+    for (char i = 'a'; i < files; i++) {
+      std::string num;
+      num += curdir + "/" + i + ".cpp";
+      cleanfs += num + " " + i + " ";
+
+      std::ofstream f{num, std::ios::out};
+      f << templ;
+    }
+
+    return 0;
+  }
+
   bool queryCleanup() {
-    std::ofstream clean{curdir + "cl", std::ios::out};
+    std::ofstream clean{curdir + "/cl", std::ios::out};
     if (!clean) {
       std::cerr << "Could not create cleaning logs\n";
       return 1;
@@ -82,5 +72,5 @@ int main() {
     return 0;
   }
 
-  int updateBuffr() { return 0; }
+  int updateTemplate() { return 0; }
 };
