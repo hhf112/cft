@@ -125,9 +125,11 @@ class Tester {
     switch (timeLimit) {
       case warning::TLE:
         std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|\n" << COLOR_END;
+        break;
       case warning::GOOD:
         std::cout << GREEN_FG << "runtime seems fine for a submit! :)\n"
                   << COLOR_END;
+        break;
       default:
         //
     }
@@ -138,8 +140,8 @@ class Tester {
   inline std::optional<status> runTests(std::ofstream& report) {
     if (!report) return {};
     // files
-    std::ifstream output{filename + "/out.txt", std::ios::out};
-    std::ifstream actualOutput{filename + "/output.txt", std::ios::out};
+    std::ifstream output{filename + "/out.txt", std::ios::in};
+    std::ifstream actualOutput{filename + "/output.txt", std::ios::in};
 
     if (!(output && actualOutput)) {
       return {};
