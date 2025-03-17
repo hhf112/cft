@@ -20,7 +20,7 @@ class Tester {
  private:
   int lpTestcase = 1;  // Lines per testcase.
   std::optional<int> runtime;
-  int cnt = 0; // Total number of lines in expected output.
+  int cnt = 0;  // Total number of lines in expected output.
   int failcnt = 0;
   int testcnt = 0;
 
@@ -29,14 +29,16 @@ class Tester {
   status result = status::UNKNOWN;
   warning timeLimit = warning::GOOD;
 
+  bool loaded = 0;
+
   bool testCompleteOne() { return ++cnt % lpTestcase != 0; }
 
   // Possible unkonwn result, only to be used after tests have been run.
   status resultMU() { return result; }
 
  public:
-  Tester(int argc, char* argv[], const std::string& curdir) {
-    filename = curdir + "/" + argv[1];
+  Tester(int argc, char* argv[],  std::string& curdir){
+    filename = std::move(curdir) + '/' + argv[1];
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
   }
 
@@ -44,7 +46,7 @@ class Tester {
     // runtime
     pid_t binID;
     char* args[] = {filename.data(), nullptr};
-    if (posix_spawn(&binID, filename.c_str(), NULL, NULL, args, NULL) != 0) {
+    if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
       perror("posix failed");
       return status::PROCESSING_ERR;
     }
@@ -66,6 +68,7 @@ class Tester {
 
     if (runtime >= 150) timeLimit = warning::TLE;
 
+    loaded = 1;
     return {};
   }
 
@@ -107,7 +110,8 @@ class Tester {
         std::cout << "Unable to fetch required files.\n";
 
       default:
-      std::cout << BLACK_ON_WHITE << "Unknown error occured ...\n" << COLOR_END;
+        std::cout << BLACK_ON_WHITE << "Unknown error occured ...\n"
+                  << COLOR_END;
         //
     }
 
@@ -128,17 +132,17 @@ class Tester {
                   << COLOR_END;
         break;
       default:
-      std::cout << BLACK_ON_WHITE << "Unknown error occured ... k:[\n"  << COLOR_END;
-      return 1;
+        std::cout << BLACK_ON_WHITE << "Unknown error occured ... k:[\n"
+                  << COLOR_END;
+        return 1;
         //
     }
 
-    report.close();
     return 0;
   }
 
   inline std::optional<status> runTests(std::ofstream& report) {
-    if (!report) return {};
+    if (!report || !loaded) return {};
     // files
     std::ifstream output{filename + "/out.txt", std::ios::in};
     std::ifstream actualOutput{filename + "/output.txt", std::ios::in};

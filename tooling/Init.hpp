@@ -18,7 +18,7 @@ class Init {
   std::string templ;
 
  public:
-  Init(int argc, char* argv[], const std::string& cwd) : curdir{cwd} {
+  Init(int argc, char* argv[], const std::string& cwd) : curdir{std::move(cwd)} {
     std::cout << "Flushing IO files ...\n";
     // clear IO files.
     {
@@ -76,13 +76,12 @@ class Init {
   }
 
   inline int queryCleanup() {
-    std::ofstream clean{curdir + "/cl", std::ios::out};
+    std::ofstream clean{curdir + "/cl", std::ios::in};
     if (!clean) {
       std::cerr << "Could not create cleaning logs\n";
       return 1;
     }
     clean << cleanfs;
-    clean.close();
 
     return 0;
   }

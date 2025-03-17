@@ -10,6 +10,7 @@
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path();
 
+  //All possible argument checks are done in Parser.hpp.
   Parse inputTokens(argc, argv);
 
   switch (inputTokens.whichAction()) {
