@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include <chrono>
+#include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -25,20 +26,21 @@ class Tester {
   int testcnt = 0;
 
   std::string filename;
+  std::string curdir;
 
   status result = status::UNKNOWN;
   warning timeLimit = warning::GOOD;
 
   bool loaded = 0;
 
-  bool testCompleteOne() { return ++cnt % lpTestcase != 0; }
+  bool testCompleteOne() { return ++cnt % lpTestcase == 0; }
 
   // Possible unkonwn result, only to be used after tests have been run.
   status resultMU() { return result; }
 
  public:
-  Tester(int argc, char* argv[],  std::string& curdir){
-    filename = std::move(curdir) + '/' + argv[1];
+  Tester(int argc, char* argv[], std::string& cwd) : curdir{std::move(cwd)} {
+    filename = curdir + '/' + argv[1];
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
   }
 
@@ -59,7 +61,7 @@ class Tester {
     }
     auto end = std::chrono::high_resolution_clock::now();
 
-    if (WIFEXITED(binStatus)) {
+    if (!WIFEXITED(binStatus)) {
       return status::RUNTIME_ERR;
     }
 
@@ -73,7 +75,7 @@ class Tester {
   }
 
   inline int judge() {
-    std::ofstream report{filename + "/report.txt", std::ios::out};
+    std::ofstream report{curdir + "/report.txt", std::ios::out};
     if (!runTests(report)) result = status::PROCESSING_ERR;
 
     // FINAL VERDICT
@@ -81,37 +83,38 @@ class Tester {
 
     switch (result) {
       case status::AC:
-        std::cout << WHITE_ON_GREEN << "Accepted\n" << COLOR_END;
+        std::cout << WHITE_ON_GREEN << "Accepted" << COLOR_END <<'\n';
         report << "All tests passed!\n";
         std::cout << "verdict: All tests passed.\n";
         break;
 
       case status::WA:
-        std::cout << WHITE_ON_RED << "Wrong Answer\n" << COLOR_END;
+        std::cout << WHITE_ON_RED << "Wrong Answer" << COLOR_END << '\n';
         report << "WRONG ANSWER\n";
         std::cout << "verdict: test failed.\n";
         std::cout << failcnt << " test(s) failed\n";
         break;
 
       case status::NILIO:
-        std::cout << WHITE_ON_CYAN << "I/O empty.\n" << COLOR_END;
-        break;
+        std::cout << WHITE_ON_CYAN << "I/O empty." << COLOR_END << '\n';
+        return 1;
 
       case status::WRONG_OUTPUT:
-        std::cout << BLACK_ON_WHITE << "WRONG OUTPUT\n" << COLOR_END;
-        report << "verdict: Invalid handling of input, tests terminated.\n";
+        std::cout << BLACK_ON_WHITE << "Wrong output." << COLOR_END << '\n';
         std::cout
             << "verdict: output length doesn't match expected length, test "
                "terminated.\n";
-        break;
+        return 1;
 
       case status::PROCESSING_ERR:
-        std::cout << WHITE_ON_CYAN << "Processing Error\n" << COLOR_END;
+        std::cout << WHITE_ON_CYAN << "Processing Error" << COLOR_END << '\n';
         std::cout << "Unable to fetch required files.\n";
+        return 1;
 
       default:
-        std::cout << BLACK_ON_WHITE << "Unknown error occured ...\n"
-                  << COLOR_END;
+        std::cout << BLACK_ON_WHITE << "Unknown error occured ..." << COLOR_END
+                  << '\n';
+        return 1;
         //
     }
 
@@ -125,15 +128,16 @@ class Tester {
 
     switch (timeLimit) {
       case warning::TLE:
-        std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|\n" << COLOR_END;
+        std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|" << COLOR_END
+                  << '\n';
         break;
       case warning::GOOD:
-        std::cout << GREEN_FG << "runtime seems fine for a submit! :)\n"
-                  << COLOR_END;
+        std::cout << GREEN_FG << "runtime seems fine for a submit! :)"
+                  << COLOR_END << '\n';
         break;
       default:
-        std::cout << BLACK_ON_WHITE << "Unknown error occured ... k:[\n"
-                  << COLOR_END;
+        std::cout << BLACK_ON_WHITE << "Unknown error occured ... k:["
+                  << COLOR_END << '\n';
         return 1;
         //
     }
@@ -144,8 +148,8 @@ class Tester {
   inline std::optional<status> runTests(std::ofstream& report) {
     if (!report || !loaded) return {};
     // files
-    std::ifstream output{filename + "/out.txt", std::ios::in};
-    std::ifstream actualOutput{filename + "/output.txt", std::ios::in};
+    std::ifstream output{curdir + "/out.txt", std::ios::in};
+    std::ifstream actualOutput{curdir + "/output.txt", std::ios::in};
 
     if (!(output && actualOutput)) {
       return {};
@@ -159,39 +163,39 @@ class Tester {
     std::string actual;
     std::string buf;
 
-    std::cerr << BRIGHT_YELLOW_FG << "Judging...\n" << COLOR_END;
+    std::cerr << BRIGHT_YELLOW_FG << "Judging..." << COLOR_END << '\n';
     while (std::getline(output, buf)) {
-      compare += buf + '\n';
+      compare += buf;
+      compare += '\n';
       if (!std::getline(actualOutput, buf)) {
         return result = status::WRONG_OUTPUT;
       }
-      actual += buf + '\n';
+      actual += buf;
+      actual += '\n';
 
       if (testCompleteOne()) {
         ++testcnt;
         report << compare;
         report << "->\n" << actual << '\n';
 
-        std::cout << "test " << testcnt << ": ";
+        std::cerr << "test " << testcnt << ": ";
         if (compare != actual) {
           result = status::WA;
           failcnt++;
           report << "FAILED\n\n";
-          std::cerr << RED_FG << "failed\n" << COLOR_END;
+          std::cerr << RED_FG << "failed" << COLOR_END <<'\n';
         } else {
-          std::cerr << GREEN_FG << "passed\n" << COLOR_END;
+          std::cerr << GREEN_FG << "passed" << COLOR_END <<'\n';
         }
-        compare.clear();
-        actual.clear();
       }
     }
 
-    if (!actualOutput.eof()) {
+    if (std::getline(actualOutput, buf)) {
       return result = status::WRONG_OUTPUT;
     }
 
     output.close();
-    actualOutput.close();
+    output.close();
 
     if (result == status::UNKNOWN) return result = status::AC;
 

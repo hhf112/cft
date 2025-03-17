@@ -77,8 +77,8 @@ class Parse {
         // user entered an invalid count of files to be created.
         if (decode(arg, 2) != query::INIT) {
           std::cerr << "Invalid count of files to be generated.\n";
-          std::cerr << "Possible count must lie within the range for a 32 bit "
-                       "unsigned integer.\n";
+          std::cerr << "Possible count must lie within the positive range of a "
+                       "positive 32 bit integer\n";
         }
         break;
       }

@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
               << "Inputted binary exited abnomrally, tests cannot be done\n";
           return 1;
         default:
-          //
+        return 0;
       }
     }
     break;
@@ -44,11 +44,11 @@ int main(int argc, char* argv[]) {
       create.queryCleanup();
     }
     break;
-    case query::CLEAN: {
-
-    }
+    // case query::CLEAN: {
+    //
+    // }
 
     default:
-      //
+    return 0;
   }
 }
