@@ -1,7 +1,5 @@
 #include <iostream>
 #include <filesystem>
-// ^ implied future windows adpation
-
 #include <iostream>
 
 #include "../enums.hpp"
@@ -39,12 +37,16 @@ int main(int argc, char* argv[]) {
           //
       }
     }
+    break;
     case query::INIT: {
       Init create(argc, argv, curdir);
       create.queryCleanup();
     }
-    case query::CONFIG: {
+    break;
+    case query::CLEAN: {
+
     }
+
     default:
       //
   }

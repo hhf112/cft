@@ -19,7 +19,7 @@ class Init {
 
  public:
   Init(int argc, char* argv[], const std::string& cwd) : curdir{cwd} {
-    std::cout << CYAN_FG << "Flushing IO files ...\n" << COLOR_END;
+    std::cout << "Flushing IO files ...\n";
     // clear IO files.
     {
       std::ofstream c1{curdir + "/input.txt", std::ios::out};
@@ -42,7 +42,7 @@ class Init {
         std::filesystem::canonical("/proc/self/exe");
     templ = binpath.parent_path() / "/template.txt";
 
-    std::cout << CYAN_FG << "Loading template\n" << COLOR_END;
+    std::cout << "Loading template\n";
     std::ifstream templateF{templ, std::ios::in};
     if (!templateF) {
       std::cerr << RED_FG << "Template not found!\n" << COLOR_END;

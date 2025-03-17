@@ -1,12 +1,11 @@
 #pragma once
 
-enum  query {
+enum query {
   JUDGE,
   INIT,
-  COUNT,
-  
-};
+  CLEAN,
 
+};
 
 enum class status {
   AC,
@@ -19,6 +18,6 @@ enum class status {
 };
 
 enum class warning {
-  TLE, 
+  TLE,
   GOOD,
 };
