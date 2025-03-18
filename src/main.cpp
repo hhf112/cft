@@ -5,7 +5,7 @@
 #include "../enums.hpp"
 #include "../ansi_macros.hpp"
 
-#include "../tooling/tools.hpp"
+#include "../tooling/include.hpp"
 
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path();
@@ -25,14 +25,13 @@ int main(int argc, char* argv[]) {
 
       switch (failedrun.value()) {
         case status::PROCESSING_ERR:
-          std::cerr << WHITE_ON_RED << "Processing Error\n" << COLOR_END;
-          std::cerr << "posix / wait ERR: Failed to run inputted binary as "
-                       "child process.\n";
+          std::cerr << WHITE_ON_RED << "Processing Error" << COLOR_END << '\n';
+          std::cerr << "failed to run inputted file.\n";
           return 1;
         case status::RUNTIME_ERR:
-          std::cout << WHITE_ON_RED << "Runtime Error\n" << COLOR_END;
+          std::cout << WHITE_ON_RED << "Runtime Error" << COLOR_END << '\n';
           std::cerr
-              << "Inputted binary exited abnomrally, tests cannot be done\n";
+              << "Inputted file exited abnomrally, tests terminated.\n";
           return 1;
         default:
         return 0;

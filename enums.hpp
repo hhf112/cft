@@ -21,3 +21,8 @@ enum class warning {
   TLE,
   GOOD,
 };
+
+enum class flerr {
+
+
+};

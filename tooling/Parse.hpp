@@ -84,9 +84,9 @@ class Parse {
       }
       default:
         std::cerr << BLACK_ON_WHITE
-                  << "Invalid number of arguments provided.\n" COLOR_END;
-        std::cerr << "Try: ./cftester <filename> \n ./cftester init \n "
-                     "./cftester init 3 \n ./cftester cl\n";
+                  << "Invalid number of arguments provided." COLOR_END << '\n';
+        std::cerr << "Try:\n cft <filename> \n cft init \n "
+                     "cft init 3 \n cft cl\n";
         exit(1);
     }
   }

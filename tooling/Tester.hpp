@@ -1,5 +1,6 @@
 #pragma once
 
+#include <errno.h>
 #include <signal.h>
 #include <spawn.h>
 #include <sys/types.h>
@@ -56,13 +57,21 @@ class Tester {
 
     int binStatus;
     if (waitpid(binID, &binStatus, 0) < 0) {
+      // may or may not add detailed error cases here.
       perror("wait failed");
       return status::PROCESSING_ERR;
     }
     auto end = std::chrono::high_resolution_clock::now();
 
     if (!WIFEXITED(binStatus)) {
+      if (WIFSIGNALED(binStatus)) {
+        std::cerr << "child terminated by signal " << WTERMSIG(binStatus)
+                  << '\n';
+      }
       return status::RUNTIME_ERR;
+    } else {
+      std::cerr << "child exited succesfully with exit code "
+                << WEXITSTATUS(binStatus) << '\n';
     }
 
     runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
@@ -81,9 +90,10 @@ class Tester {
     // FINAL VERDICT
     report << "FINAL VERDICT: \n";
 
+    std::cout << '\n';
     switch (result) {
       case status::AC:
-        std::cout << WHITE_ON_GREEN << "Accepted" << COLOR_END <<'\n';
+        std::cout << WHITE_ON_GREEN << "Accepted" << COLOR_END << '\n';
         report << "All tests passed!\n";
         std::cout << "verdict: All tests passed.\n";
         break;
@@ -112,8 +122,7 @@ class Tester {
         return 1;
 
       default:
-        std::cout << BLACK_ON_WHITE << "Unknown error occured ..." << COLOR_END
-                  << '\n';
+        std::cout << BLACK_ON_WHITE << "Unknown error occured ..." << COLOR_END << '\n';
         return 1;
         //
     }
@@ -175,6 +184,7 @@ class Tester {
 
       if (testCompleteOne()) {
         ++testcnt;
+        report << "test " << testcnt << '\n';
         report << compare;
         report << "->\n" << actual << '\n';
 
@@ -183,9 +193,9 @@ class Tester {
           result = status::WA;
           failcnt++;
           report << "FAILED\n\n";
-          std::cerr << RED_FG << "failed" << COLOR_END <<'\n';
+          std::cerr << RED_FG << "failed" << COLOR_END << '\n';
         } else {
-          std::cerr << GREEN_FG << "passed" << COLOR_END <<'\n';
+          std::cerr << GREEN_FG << "passed" << COLOR_END << '\n';
         }
       }
     }
