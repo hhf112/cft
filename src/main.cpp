@@ -8,7 +8,7 @@
 #include "../tooling/include.hpp"
 
 int main(int argc, char* argv[]) {
-  std::string curdir = std::filesystem::current_path();
+  const std::string curdir = std::filesystem::current_path().string();
 
   //All possible argument checks are done in Parser.hpp.
   Parse inputTokens(argc, argv);
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     }
     break;
     case query::INIT: {
-      Init create(argc, argv, curdir);
+      Init create(argc, argv);
       create.queryCleanup();
     }
     break;

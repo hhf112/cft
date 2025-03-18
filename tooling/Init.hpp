@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 
-
 #include "../ansi_macros.hpp"
 
 class Init {
@@ -18,20 +17,16 @@ class Init {
   std::string templ;
 
  public:
-  Init(int argc, char* argv[], const std::string& cwd) : curdir{std::move(cwd)} {
-    std::cout << "Flushing IO files ...\n";
+  Init(int argc, char *argv[]) {
+    std::cout << "Flushing / creating IO files ...\n";
     // clear IO files.
-    {
-      std::ofstream c1{curdir + "/input.txt", std::ios::out};
-      std::ofstream c2{curdir + "/output.txt", std::ios::out};
-      std::ofstream c3{curdir + "/out.txt", std::ios::out};
-      std::ofstream c4{curdir + "/report.txt", std::ios::out};
-
-      if (!(c1 && c2 && c4 && c4)) {
-        status = 1;
-        std::cerr << RED_FG << "Unsuccessfull\n" << COLOR_END;
-        return;
-      }
+    if (!std::ofstream{"input.txt", std::ios::out} ||
+        !std::ofstream{"output.txt", std::ios::out} ||
+        !std::ofstream{"out.txt", std::ios::out} ||
+        !std::ofstream{"report.txt", std::ios::out}) {
+      status = 1;
+      std::cerr << RED_FG << "Unsuccessfull!\n" << COLOR_END;
+      return;
     }
 
     // no of problem statements in the contest.
@@ -60,13 +55,17 @@ class Init {
     }
 
     for (char i = 'a'; i < files; i++) {
-      std::string num;
-      num += curdir + "/" + i + ".cpp";
-      cleanfs += num + " " + i + " ";
+      std::string fl = &i;
+      fl += ".cpp";
+      cleanfs += fl;
+      cleanfs += " ";
+      cleanfs += i;
 
-      std::ofstream f{num, std::ios::out};
+      std::ofstream f{fl, std::ios::out};
       if (!f) {
-        std::cerr << RED_FG <<  "ERR: Failed to create specified count of files. \n" << COLOR_END;
+        std::cerr << RED_FG
+                  << "ERR: Failed to create specified count of files. \n"
+                  << COLOR_END;
         return 1;
       }
       // f << templ;
@@ -76,7 +75,7 @@ class Init {
   }
 
   inline int queryCleanup() {
-    std::ofstream clean{curdir + "/cl", std::ios::in};
+    std::ofstream clean{"/cl", std::ios::in};
     if (!clean) {
       std::cerr << "Could not create cleaning logs\n";
       return 1;
@@ -86,8 +85,5 @@ class Init {
     return 0;
   }
 
-  inline int configTempl(){
-
-    return 0;
-  }
+  inline int configTempl() { return 0; }
 };

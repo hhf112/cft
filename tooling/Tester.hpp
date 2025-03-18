@@ -27,12 +27,12 @@ class Tester {
   int testcnt = 0;
 
   std::string filename;
-  std::string curdir;
 
   status result = status::UNKNOWN;
   warning timeLimit = warning::GOOD;
 
   bool loaded = 0;
+  bool buildOn = 1;
 
   bool testCompleteOne() { return ++cnt % lpTestcase == 0; }
 
@@ -40,10 +40,13 @@ class Tester {
   status resultMU() { return result; }
 
  public:
-  Tester(int argc, char* argv[], std::string& cwd) : curdir{std::move(cwd)} {
-    filename = curdir + '/' + argv[1];
+  Tester(int argc, char* argv[], const std::string& cwd) : filename{std::move(cwd)} {
+    filename += '/' ;
+    filename += argv[1];
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
   }
+
+  inline std::optional<status> build() { return {};}
 
   inline std::optional<status> loadBin() {
     // runtime
@@ -51,7 +54,7 @@ class Tester {
     char* args[] = {filename.data(), nullptr};
     if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
       perror("posix failed");
-      return status::PROCESSING_ERR;
+      return result = status::PROCESSING_ERR;
     }
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -59,7 +62,7 @@ class Tester {
     if (waitpid(binID, &binStatus, 0) < 0) {
       // may or may not add detailed error cases here.
       perror("wait failed");
-      return status::PROCESSING_ERR;
+      return result = status::PROCESSING_ERR;
     }
     auto end = std::chrono::high_resolution_clock::now();
 
@@ -84,7 +87,7 @@ class Tester {
   }
 
   inline int judge() {
-    std::ofstream report{curdir + "/report.txt", std::ios::out};
+    std::ofstream report{"report.txt", std::ios::out};
     if (!runTests(report)) result = status::PROCESSING_ERR;
 
     // FINAL VERDICT
@@ -122,7 +125,8 @@ class Tester {
         return 1;
 
       default:
-        std::cout << BLACK_ON_WHITE << "Unknown error occured ..." << COLOR_END << '\n';
+        std::cout << BLACK_ON_WHITE << "Unknown error occured ..." << COLOR_END
+                  << '\n';
         return 1;
         //
     }
@@ -157,8 +161,8 @@ class Tester {
   inline std::optional<status> runTests(std::ofstream& report) {
     if (!report || !loaded) return {};
     // files
-    std::ifstream output{curdir + "/out.txt", std::ios::in};
-    std::ifstream actualOutput{curdir + "/output.txt", std::ios::in};
+    std::ifstream output{"out.txt", std::ios::in};
+    std::ifstream actualOutput{"output.txt", std::ios::in};
 
     if (!(output && actualOutput)) {
       return {};
@@ -198,14 +202,14 @@ class Tester {
           std::cerr << GREEN_FG << "passed" << COLOR_END << '\n';
         }
       }
+
+      compare.clear();
+      actual.clear();
     }
 
     if (std::getline(actualOutput, buf)) {
       return result = status::WRONG_OUTPUT;
     }
-
-    output.close();
-    output.close();
 
     if (result == status::UNKNOWN) return result = status::AC;
 
