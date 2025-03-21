@@ -8,7 +8,7 @@
 #include "../tooling/include.hpp"
 
 int main(int argc, char* argv[]) {
-  const std::string curdir = std::filesystem::current_path().string();
+  std::string curdir = std::filesystem::current_path().string();
 
   //All possible argument checks are done in Parser.hpp.
   Parse inputTokens(argc, argv);

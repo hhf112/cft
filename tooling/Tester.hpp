@@ -10,8 +10,11 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
+#include <ios>
 #include <iostream>
+#include <limits>
 #include <optional>
 #include <string>
 
@@ -40,16 +43,66 @@ class Tester {
   status resultMU() { return result; }
 
  public:
-  Tester(int argc, char* argv[], const std::string& cwd) : filename{std::move(cwd)} {
-    filename += '/' ;
+  Tester(int argc, char* argv[], std::string& cwd) : filename{std::move(cwd)} {
+    filename += '/';
     filename += argv[1];
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
+
+    if (buildOn) {
+      std::optional<buildErr> buildFail = build(1);
+      if (!buildFail) {
+        std::cerr << "build finsihed succesfully. \n";
+        return;
+      }
+
+      switch (buildFail.value()) {
+        case buildErr::PROCESSING_ERR:
+          std::cerr << "Unable to fetch buildscripts. \n";
+          return;
+        case buildErr::NULL_BS:
+          std::cerr << RED_FG << "No buildsrcipts found!\n"
+                    << COLOR_END << '\n';
+          return;
+        case buildErr::BUILD_FAIL:
+          std::cerr << RED_FG << "Build failed\n" << COLOR_END << '\n';
+          return;
+
+        default:
+          //
+      }
+    }
   }
 
-  inline std::optional<status> build() { return {};}
+  inline std::optional<buildErr> build(int point) {
+    std::filesystem::path path = std::filesystem::canonical("proc/self/exe");
+    path = path.parent_path() += "/bs/buildscripts.txt";
+
+    std::fstream bss{path, std::ios::in};
+    if (!bss) {
+      return buildErr::PROCESSING_ERR;
+    }
+    
+    std::stringstream builds;
+    builds <<bss.rdbuf();
+
+    while (point--) {
+    bss.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //skip lines to the desired build script.
+
+    }
+    std::string bs;
+    if (!std::getline(bss, bs)) {
+      return buildErr::NULL_BS;
+    }
+    std::cerr << BRIGHT_YELLOW_FG << "building ..." << COLOR_END << '\n';
+    if (std::system(bs.data()) != 0) {
+      return buildErr::BUILD_FAIL;
+    }
+    return {};
+  }
 
   inline std::optional<status> loadBin() {
     // runtime
+    std::cerr << BRIGHT_YELLOW_FG << "loading binary ..." << COLOR_END << '\n';
     pid_t binID;
     char* args[] = {filename.data(), nullptr};
     if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
@@ -73,7 +126,7 @@ class Tester {
       }
       return status::RUNTIME_ERR;
     } else {
-      std::cerr << "child exited succesfully with exit code "
+      std::cerr << "\tchild exited succesfully with exit code "
                 << WEXITSTATUS(binStatus) << '\n';
     }
 

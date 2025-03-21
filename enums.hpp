@@ -4,6 +4,7 @@ enum query {
   JUDGE,
   INIT,
   CLEAN,
+  COUNT,
 
 };
 
@@ -22,7 +23,8 @@ enum class warning {
   GOOD,
 };
 
-enum class flerr {
-
-
+enum class buildErr {
+  PROCESSING_ERR,
+  NULL_BS,
+  BUILD_FAIL,
 };

@@ -17,6 +17,7 @@ class Parse {
  private:
   query action;
 
+
   std::optional<query> decode(std::string& cs, int argno) {
     switch (argno) {
       case 2: {
