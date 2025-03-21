@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
@@ -49,50 +50,44 @@ class Tester {
     lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
 
     if (buildOn) {
-      std::optional<buildErr> buildFail = build(1);
+      std::optional<buildErr> buildFail = build();
       if (!buildFail) {
-        std::cerr << "build finsihed succesfully. \n";
+        std::cerr << "\tbuild finsihed succesfully. \n";
         return;
       }
 
       switch (buildFail.value()) {
         case buildErr::PROCESSING_ERR:
           std::cerr << "Unable to fetch buildscripts. \n";
-          return;
         case buildErr::NULL_BS:
           std::cerr << RED_FG << "No buildsrcipts found!\n"
                     << COLOR_END << '\n';
-          return;
+
         case buildErr::BUILD_FAIL:
           std::cerr << RED_FG << "Build failed\n" << COLOR_END << '\n';
-          return;
+        default:
+          exit(1);
       }
     }
   }
-  inline std::optional<buildErr> build(int point) {
-    std::filesystem::path path = std::filesystem::canonical("proc/self/exe");
-    path = path.parent_path() += "/bs/buildscripts.txt";
+  inline std::optional<buildErr> build() {
+    std::string sourcefile = filename + ".cpp";
+    char* args[] = {(char*)"g++", sourcefile.data(), (char*)"-o",
+                    filename.data(), NULL};
 
-    std::fstream bss{path, std::ios::in};
-    if (!bss) {
+    std::cerr << BRIGHT_YELLOW_FG << "building ..." << COLOR_END << '\n';
+    pid_t buildID;
+    if (posix_spawnp(&buildID, "g++", NULL, NULL, args, environ) != 0) {
+      perror("posix failed");
       return buildErr::PROCESSING_ERR;
     }
 
-    std::stringstream builds;
-    builds << bss.rdbuf();
+    int status;
+    if (waitpid(buildID, &status, 0) < 0) {
+      perror("wait failed");
+      return buildErr::PROCESSING_ERR;
+    }
 
-    while (point--) {
-      bss.ignore(std::numeric_limits<std::streamsize>::max(),
-                 '\n');  // skip lines to the desired build script.
-    }
-    std::string bs;
-    if (!std::getline(bss, bs)) {
-      return buildErr::NULL_BS;
-    }
-    std::cerr << BRIGHT_YELLOW_FG << "building ..." << COLOR_END << '\n';
-    if (std::system(bs.data()) != 0) {
-      return buildErr::BUILD_FAIL;
-    }
     return {};
   }
 
@@ -159,6 +154,7 @@ class Tester {
 
       case status::NILIO:
         std::cout << WHITE_ON_CYAN << "I/O empty." << COLOR_END << '\n';
+        std::cout << "verdict: input / output / expected output files are empty. Nothing to test.\n";
         return 1;
 
       case status::WRONG_OUTPUT:
@@ -226,6 +222,8 @@ class Tester {
     std::string buf;
 
     std::cerr << BRIGHT_YELLOW_FG << "Judging..." << COLOR_END << '\n';
+
+
     while (std::getline(output, buf)) {
       compare += buf;
       compare += '\n';
@@ -254,6 +252,10 @@ class Tester {
 
       compare.clear();
       actual.clear();
+    }
+
+    if (!cnt) {
+      return result = status::NILIO;
     }
 
     if (std::getline(actualOutput, buf)) {

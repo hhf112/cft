@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     break;
     case query::INIT: {
       Init create(argc, argv);
-      create.queryCleanup();
+      create.createFiles();
     }
     break;
     // case query::CLEAN: {

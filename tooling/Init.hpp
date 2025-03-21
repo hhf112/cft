@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -33,11 +35,13 @@ class Init {
     files = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
     //
     // load template.
-    std::filesystem::path binpath =
-        std::filesystem::canonical("/proc/self/exe");
-    templ = binpath.parent_path() / "/template.cpp";
+    std::string repo = std::filesystem::canonical("/proc/self/exe")
+                           .parent_path()
+                           .parent_path()
+                           .string();
+    templ = repo + "/template.cpp";
 
-    std::cout << "Loading template\n";
+    std::cout << "Loading template ... \n";
     std::ifstream templateF{templ, std::ios::in};
     if (!templateF) {
       std::cerr << RED_FG << "Template not found!\n" << COLOR_END;
@@ -46,7 +50,14 @@ class Init {
   }
 
   inline int createFiles() {
-    cleanfs += "rm ";
+    std::cerr << "Creating cleaning logs \n";
+
+    std::ofstream cl{"cl", std::ios::out};
+
+    if (!cl) {
+      std::cerr << RED_FG << "failed!" << COLOR_END << '\n';
+      return 1;
+    }
 
     std::ifstream templateStream{templ, std::ios::in};
     if (!templateStream) {
@@ -54,12 +65,12 @@ class Init {
       return 1;
     }
 
-    for (char i = 'a'; i < files; i++) {
-      std::string fl = &i;
+    cl << "rm input.txt out.txt output.txt report.txt cl ";
+    for (int i = 0; i < files; i++) {
+      std::string fl;
+      fl += (char)(i + 'a');
       fl += ".cpp";
-      cleanfs += fl;
-      cleanfs += " ";
-      cleanfs += i;
+      cl << fl << " " << (char)(i + 'a');
 
       std::ofstream f{fl, std::ios::out};
       if (!f) {
@@ -68,19 +79,9 @@ class Init {
                   << COLOR_END;
         return 1;
       }
-      // f << templ;
-    }
 
-    return 0;
-  }
-
-  inline int queryCleanup() {
-    std::ofstream clean{"/cl", std::ios::in};
-    if (!clean) {
-      std::cerr << "Could not create cleaning logs\n";
-      return 1;
+      f << templateStream.rdbuf();
     }
-    clean << cleanfs;
 
     return 0;
   }
