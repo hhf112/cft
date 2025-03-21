@@ -35,7 +35,7 @@ class Init {
     // load template.
     std::filesystem::path binpath =
         std::filesystem::canonical("/proc/self/exe");
-    templ = binpath.parent_path() / "/template.txt";
+    templ = binpath.parent_path() / "/template.cpp";
 
     std::cout << "Loading template\n";
     std::ifstream templateF{templ, std::ios::in};

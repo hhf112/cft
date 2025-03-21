@@ -66,13 +66,9 @@ class Tester {
         case buildErr::BUILD_FAIL:
           std::cerr << RED_FG << "Build failed\n" << COLOR_END << '\n';
           return;
-
-        default:
-          //
       }
     }
   }
-
   inline std::optional<buildErr> build(int point) {
     std::filesystem::path path = std::filesystem::canonical("proc/self/exe");
     path = path.parent_path() += "/bs/buildscripts.txt";
@@ -81,13 +77,13 @@ class Tester {
     if (!bss) {
       return buildErr::PROCESSING_ERR;
     }
-    
+
     std::stringstream builds;
-    builds <<bss.rdbuf();
+    builds << bss.rdbuf();
 
     while (point--) {
-    bss.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //skip lines to the desired build script.
-
+      bss.ignore(std::numeric_limits<std::streamsize>::max(),
+                 '\n');  // skip lines to the desired build script.
     }
     std::string bs;
     if (!std::getline(bss, bs)) {
