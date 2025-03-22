@@ -67,7 +67,8 @@ class Parse {
         break;
       }
       case 3: {
-        std::string arg(argv[2]);
+        std::string arg(argv[1]);
+        std::string num (argv[2]);
         // User entered a filename with a numerical value.
         if (decode(arg, 1) != query::INIT) {
           std::cerr
@@ -76,7 +77,7 @@ class Parse {
         }
 
         // user entered an invalid count of files to be created.
-        if (decode(arg, 2) != query::INIT) {
+        if (decode(num, 2) != query::INIT) {
           std::cerr << "Invalid count of files to be generated.\n";
           std::cerr << "Possible count must lie within the positive range of a "
                        "positive 32 bit integer\n";

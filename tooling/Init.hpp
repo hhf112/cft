@@ -70,7 +70,7 @@ class Init {
       std::string fl;
       fl += (char)(i + 'a');
       fl += ".cpp";
-      cl << fl << " " << (char)(i + 'a');
+      cl << fl << " " << (char)(i + 'a') << " ";
 
       std::ofstream f{fl, std::ios::out};
       if (!f) {
