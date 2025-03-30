@@ -81,6 +81,14 @@ class Init {
       }
 
       f << templateStream.rdbuf();
+      if (f.fail()) {
+        std::cerr << RED_FG
+                  << "Unknown error occured while copying the template. \n"
+                  << COLOR_END;
+        return 1;
+      } 
+
+      templateStream.seekg(0);
     }
 
     return 0;
