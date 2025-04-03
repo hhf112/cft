@@ -1,16 +1,13 @@
-#include <iostream>
 #include <filesystem>
 #include <iostream>
 
-#include "../enums.hpp"
-#include "../ansi_macros.hpp"
-
-#include "../tooling/include.hpp"
+#include "../tools/include.hpp"
+#include "../util/include.hpp"
 
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path().string();
 
-  //All possible argument checks are done in Parser.hpp.
+  // All possible argument checks are done in Parser.hpp.
   Parse inputTokens(argc, argv);
 
   switch (inputTokens.whichAction()) {
@@ -30,24 +27,17 @@ int main(int argc, char* argv[]) {
           return 1;
         case status::RUNTIME_ERR:
           std::cout << WHITE_ON_RED << "Runtime Error" << COLOR_END << '\n';
-          std::cerr
-              << "Inputted file exited abnomrally, tests terminated.\n";
+          std::cerr << "Inputted file exited abnomrally, tests terminated.\n";
           return 1;
         default:
-        return 0;
+          return 0;
       }
-    }
-    break;
+    } break;
     case query::INIT: {
       Init create(argc, argv);
       create.createFiles();
-    }
-    break;
-    // case query::CLEAN: {
-    //
-    // }
-
+    } break;
     default:
-    return 0;
+      return 0;
   }
 }
