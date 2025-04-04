@@ -1,3 +1,4 @@
+//ansi color macros.
 #pragma once
 
 #define COLOR_END "\033[0m"

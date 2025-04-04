@@ -12,19 +12,21 @@
 #include <string>
 
 #include "../tools/Tester.hpp"
+#include "../util/include.hpp"
 
 //
-inline std::optional<status> Tester::loadBin() {
-  // runtime
-  std::cerr << BRIGHT_YELLOW_FG << "loading binary ..." << COLOR_END << '\n';
+ std::optional<status> Tester::loadBin() {
   pid_t binID;
   char* args[] = {filename.data(), nullptr};
+
+  std::cerr << BRIGHT_YELLOW_FG << "loading binary ..." << COLOR_END << '\n';
+
   if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
     perror("posix failed");
     return result = status::PROCESSING_ERR;
   }
-  auto start = std::chrono::high_resolution_clock::now();
 
+  auto start = std::chrono::high_resolution_clock::now();
   int binStatus;
   if (waitpid(binID, &binStatus, 0) < 0) {
     // may or may not add detailed error cases here.
@@ -33,6 +35,7 @@ inline std::optional<status> Tester::loadBin() {
   }
   auto end = std::chrono::high_resolution_clock::now();
 
+    //can put more error handling here ...
   if (!WIFEXITED(binStatus)) {
     if (WIFSIGNALED(binStatus)) {
       std::cerr << "child terminated by signal " << WTERMSIG(binStatus) << '\n';
@@ -46,7 +49,7 @@ inline std::optional<status> Tester::loadBin() {
   runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                 .count();
 
-  if (runtime >= 150) timeLimit = warning::TLE;
+  if (runtime >= TIME_LIMIT) timeLimit = warning::TLE;
 
   loaded = 1;
   return {};

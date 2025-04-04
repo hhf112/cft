@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 
+//create files, check availibility of template.
 Init::Init(int argc, char *argv[]) {
   std::cout << "Flushing / creating IO files ...\n";
   // clear IO files.
