@@ -1,8 +1,10 @@
 
 #include <optional>
+#include <stdexcept>
 #include <string>
 
 #include "../tools/Parse.hpp"
+
 
 std::optional<query> Parse::decode(std::string& cs, int argno) {
   switch (argno) {

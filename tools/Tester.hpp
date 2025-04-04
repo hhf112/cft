@@ -39,7 +39,6 @@ class Tester {
   bool loaded = 0;
   bool buildOn = 1;
 
-  // idk looks better ig.
   bool testCompleteOne() { return ++cnt % lpTestcase == 0; }
 
 
@@ -48,17 +47,21 @@ class Tester {
   Tester(int argc, char* argv[], std::string& cwd);
 
   // currently spawns the generic cpp build script on the filename + ".cpp"
+  // returns build status.
   // buildscripts support ? 
   std::optional<buildErr> build();
 
-  // spawns built binary to record runtime and check program status.
+  // spawns built binary then records runtime.
+  // possible error status handled in main.
   // currently doesn't detect idleness status.
   std::optional<status> loadBin();
 
   // calls runTests then passes verdict based on report.
+  // exits 1 after handling possible errors.
   int judge();
 
   // Overwrites report.
+  // possible error status returned is handled by judge.
   std::optional<status> runTests(std::ofstream& report);
 
   // Possible unkonwn result, try to use only after tests have been done.

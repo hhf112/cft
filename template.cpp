@@ -1,5 +1,23 @@
 #include <bits/stdc++.h>
 using namespace std;
+using LL = long long int;
+
+#define N 100000
+#define mod 10000000
+#define pb push_back
+#define eb emplace_back
+#define pii pair <int, int>
+#define pll pair <LL, LL>
+#define f first
+#define s second
+
+template <typename T>
+T gcd (T a, T b) {
+    if (b == 0) return a;
+    return gcd (b, a % b);
+}
+
+
 
 inline void solve() {
 

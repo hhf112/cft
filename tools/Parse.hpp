@@ -7,7 +7,7 @@
 
 #include "../util/include.hpp"
 
-//oarse CLI arguments,
+//oarse cli arguments,
 class Parse {
  private:
   query action;

@@ -5,7 +5,9 @@ CXX_VERSION := -std=c++23
 MAKEFILE_DIR := $(shell pwd)
 BIN := ./app/cft
 
-all: build install
+
+install: build seed 
+	@echo "Installation completed successfully."
 
 build: ${BIN}
 
@@ -14,6 +16,11 @@ ${BIN}: ${SOURCES}
 	@${CXX} ${CXX_VERSION} ${SOURCES} -o $@
 
 
-install:
+seed:
 	@echo "Installing ..."
 	@sudo ln -sf $(MAKEFILE_DIR)/${BIN} /usr/local/bin/cft
+
+clean:
+	@echo "Uninstalling binary ..."
+	@rm -f ${BIN}
+	@sudo rm -f /usr/local/bin/cft
