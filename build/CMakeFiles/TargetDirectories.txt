@@ -1,3 +1,0 @@
-/mnt/d/dev/cft/build/CMakeFiles/cft.dir
-/mnt/d/dev/cft/build/CMakeFiles/edit_cache.dir
-/mnt/d/dev/cft/build/CMakeFiles/rebuild_cache.dir
