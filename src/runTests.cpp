@@ -23,7 +23,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
   std::string actual;
   std::string buf;
 
-  std::cerr << BRIGHT_YELLOW_FG << "Judging..." << COLOR_END << '\n';
+  std::cerr << BRIGHT_YELLOW_FG << "Judging...📜" << COLOR_END << '\n';
 
   while (std::getline(output, buf)) {
     compare += buf;

@@ -1,5 +1,4 @@
 
-#include <iomanip>
 #define utch reinterpret_cast<const char*>
 
 #include <algorithm>
@@ -8,6 +7,7 @@
 #include <iterator>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include "./colors.hpp"
 
@@ -18,19 +18,19 @@ std::string lowerCase(std::string& s) {
   return lower;
 }
 
-void buildSpinner(int& done) {
-  const char* frames[] = {"|", "/", "_", utch(u8"😖"), utch(u8"💥")};
-
+void spinnerBool(std::array<std::string, 3>& display,
+             std::vector<std::string>& frames, int& done) {
+  int frm = frames.size();
   int i = 0;
   while (!done) {
-    std::cerr << BRIGHT_YELLOW_FG << "building " << COLOR_END << frames[i % 5] << '\r';
+    std::cerr << BRIGHT_YELLOW_FG << display[0] << COLOR_END << frames[i % frm]
+              << '\r';
     i++;
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
   if (done > 0)
-    std::cerr << GREEN_FG << utch(u8"✅ build completed successfully!")
-              << COLOR_END << '\n';
+    std::cerr << GREEN_FG << display[1] << COLOR_END << '\n';
   else
-    std::cerr << RED_FG << utch(u8"❌ build failed!") << COLOR_END << '\n';
+    std::cerr << RED_FG << display[2] << COLOR_END << '\n';
 }

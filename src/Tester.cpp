@@ -23,7 +23,10 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
 
   if (buildOn) {
     int buildFinish = 0;
-    std::thread startBuild(buildSpinner, std::ref(buildFinish));
+    auto disp = DISP_BUILD;
+    auto frames = FR_EXPLODE;
+    std::thread startBuild(spinnerBool, std::ref(disp), std::ref(frames), std::ref(buildFinish));
+
     std::optional<buildErr> buildFail = build();
     if (!buildFail) {
       buildFinish = 1;

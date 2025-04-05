@@ -36,7 +36,7 @@ class Tester {
   status result = status::UNKNOWN;
   warning timeLimit = warning::GOOD;  // heh
 
-  bool loaded = 0;
+  int loaded = 0;
   bool buildOn = 1;
 
   bool testCompleteOne() { return ++cnt % lpTestcase == 0; }
