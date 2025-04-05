@@ -11,6 +11,9 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <thread>
+
+#include "../util/include.hpp"
 
 Tester::Tester(int argc, char* argv[], std::string& cwd)
     : filename{std::move(cwd)} {
@@ -19,22 +22,30 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
   lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
 
   if (buildOn) {
+    int buildFinish = 0;
+    std::thread startBuild(buildSpinner, std::ref(buildFinish));
     std::optional<buildErr> buildFail = build();
     if (!buildFail) {
-      std::cerr << "\tbuild finsihed succesfully. \n";
+      buildFinish = 1;
+      startBuild.join();
       return;
+    } else {
+      buildFinish = -1;
     }
+    startBuild.join();
 
     switch (buildFail.value()) {
       case buildErr::PROCESSING_ERR:
         std::cerr << "Unable to fetch buildscripts. \n";
+        break;
       case buildErr::NULL_BS:
         std::cerr << RED_FG << "No buildsrcipts found!\n" << COLOR_END << '\n';
+        break;
 
       case buildErr::BUILD_FAIL:
         std::cerr << RED_FG << "Build failed\n" << COLOR_END << '\n';
-      default:
-        exit(1);
+        break;
     }
+    exit(1);
   }
 }

@@ -1,5 +1,5 @@
 //ansi color macros.
-#pragma once
+#pragma oncecolors
 
 #define COLOR_END "\033[0m"
 
@@ -7,9 +7,9 @@
 
 #define CYAN_FG "\033[36m"
 
-#define GREEN_FG "\033[92m"
+#define GREEN_FG "\033[32m"
 
-#define BRIGHT_YELLOW_FG "\033[93m"
+#define BRIGHT_YELLOW_FG "\033[33m" //normal yellow, cuz I don't want to change it everywhere.
 
 #define WHITE_ON_GREEN "\033[97;42m"
 

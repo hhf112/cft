@@ -1,4 +1,4 @@
-SOURCES := $(wildcard ./src/*.cpp) ./main.cpp
+SOURCES := $(wildcard ./src/*.cpp) $(wildcard ./util/misc.cpp) ./main.cpp
 
 CXX := g++ 
 CXX_VERSION := -std=c++23 

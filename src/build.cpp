@@ -5,18 +5,17 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <optional>
 #include <string>
 
 #include "../tools/Tester.hpp"
+#include "../util/include.hpp"
 
 std::optional<buildErr> Tester::build() {
   std::string sourcefile = filename + ".cpp";
   char* args[] = {(char*)"g++", sourcefile.data(), (char*)"-o", filename.data(),
                   NULL};
 
-  std::cerr << BRIGHT_YELLOW_FG << "building ..." << COLOR_END << '\n';
   pid_t buildID;
   if (posix_spawnp(&buildID, "g++", NULL, NULL, args, environ) != 0) {
     perror("posix failed");
@@ -28,6 +27,11 @@ std::optional<buildErr> Tester::build() {
     perror("wait failed");
     return buildErr::PROCESSING_ERR;
   }
+
+
+  if (!WIFEXITED(status)) {
+    return buildErr::BUILD_FAIL;
+  } 
 
   return {};
 }

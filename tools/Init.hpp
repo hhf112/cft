@@ -18,9 +18,12 @@ class Init {
   std::string templ;
 
  public:
+  //flushes IO files and loads the tepmplate path if a valid template is found.
   Init(int argc, char *argv[]);
 
+  //Creates filea as specified by files and also initializes cleanfs.
   int createFiles();
 
+  //Self descriptive.
   int configTempl();
 };

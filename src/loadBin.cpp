@@ -14,12 +14,14 @@
 #include "../tools/Tester.hpp"
 #include "../util/include.hpp"
 
+#define utch reinterpret_cast<const char*>
+
 //
  std::optional<status> Tester::loadBin() {
   pid_t binID;
   char* args[] = {filename.data(), nullptr};
 
-  std::cerr << BRIGHT_YELLOW_FG << "loading binary ..." << COLOR_END << '\n';
+  std::cerr << BRIGHT_YELLOW_FG << "loading binary ..." << COLOR_END;
 
   if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
     perror("posix failed");
@@ -42,8 +44,8 @@
     }
     return status::RUNTIME_ERR;
   } else {
-    std::cerr << "\tchild exited succesfully with exit code "
-              << WEXITSTATUS(binStatus) << '\n';
+    std::cerr << GREEN_FG << utch(u8"\r✅ binary exited successfully with exit code ")
+              << WEXITSTATUS(binStatus) << COLOR_END << '\n';
   }
 
   runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
