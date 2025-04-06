@@ -34,7 +34,7 @@ Init::Init(int argc, char *argv[]) {
   std::cout << "Loading template ... \n";
   std::ifstream templateF{templ, std::ios::in};
   if (!templateF) {
-    std::cerr << RED_FG << "Template not found!\n" << COLOR_END;
+    std::cerr << RED_FG << "Template not found!" << COLOR_END << '\n';
     return;
   }
 }

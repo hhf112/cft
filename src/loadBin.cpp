@@ -47,6 +47,7 @@ std::optional<status> Tester::loadBin() {
     }
     return status::RUNTIME_ERR;
   } else {
+        std::cerr << WEXITSTATUS(binStatus) << '\n';
     loaded = 1;
   }
 

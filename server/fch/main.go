@@ -1,25 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-
-	"github.com/go-chi/chi"
-	log "github.com/sirupsen/logrus"
 )
 
+
+func  getTests (w http.ResponseWriter, r *http.Request) {
+  fmt.Println(r.Body)
+
+}
+
 func main() {
-  //logs errors
-	log.SetReportCaller(true)
-
-  //a handler thingy, express equivalent .
-  var r *chi.Mux = chi.NewRouter();
-
-  //typical http server by go
-	err := http.ListenAndServe("localhost:1327", r)
-  if err != nil {
-    log.Error(err)
-  }
-  
-
+  err := http.ListenAndServe("localhost: 1327", getTests)
 
 }

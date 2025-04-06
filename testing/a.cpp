@@ -18,7 +18,6 @@ T gcd (T a, T b) {
 }
 
 
-
 inline void solve() {
 
 }

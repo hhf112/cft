@@ -1,26 +1,41 @@
-SOURCES := $(wildcard ./src/*.cpp) $(wildcard ./util/misc.cpp) ./main.cpp
+# Compiler & flags
+CXX := g++
+CXXFLAGS := -std=c++23 #And more if you wish
 
-CXX := g++ 
-CXX_VERSION := -std=c++23 
+# Directories and target
 MAKEFILE_DIR := $(shell pwd)
 BIN := ./app/cft
 
+# Source and object files
+SOURCES := $(wildcard ./src/*.cpp) ./util/misc.cpp ./main.cpp
+OBJECTS := $(SOURCES:.cpp=.o)
 
-install: build seed 
+
+#Sym-link to be created.
+SYM_LINK := /usr/local/bin/cft
+
+all: install
+
+install: build seed
 	@echo "Installation completed successfully."
 
-build: ${BIN}
+build: $(BIN)
 
-${BIN}: ${SOURCES}
-	@echo "Building ..."
-	@${CXX} ${CXX_VERSION} ${SOURCES} -o $@
+$(BIN): $(OBJECTS)
+	@echo "Linking binary..."
+	@$(CXX) $(CXXFLAGS) $(OBJECTS) -o $@
 
+%.o: %.cpp
+	@echo "Compiling $<..."
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-seed:
-	@echo "Installing ..."
-	@sudo ln -sf $(MAKEFILE_DIR)/${BIN} /usr/local/bin/cft
+seed: 
+	@echo "Seeding path ..."
+	@sudo ln -sf $(MAKEFILE_DIR)/$(BIN) $(SYM_LINK)
 
 clean:
-	@echo "Uninstalling binary ..."
-	@rm -f ${BIN}
+	@echo "Cleaning up..."
+	@rm -f $(OBJECTS) $(BIN)
 	@sudo rm -f /usr/local/bin/cft
+
+.PHONY: all install build seed clean

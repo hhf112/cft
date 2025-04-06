@@ -47,6 +47,7 @@ int Init::createFiles() {
 
     templateStream.seekg(0);
   }
+    cl << "> /dev/null 2>&1";
 
     std::cout << GREEN_FG << "Files created successfully! ;)" << COLOR_END << '\n';
 
