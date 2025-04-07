@@ -1,1 +1,4 @@
-./src/*.o
+#object files
+
+src/*.o
+main.o
