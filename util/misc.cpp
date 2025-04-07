@@ -30,7 +30,7 @@ void spinnerBool(std::array<std::string, 3>& display,
   }
 
   if (done > 0)
-    std::cerr << GREEN_FG << display[1] << COLOR_END << '\n';
+    std::cerr << GREEN_FG << display[1] << COLOR_END;
   else
-    std::cerr << RED_FG << display[2] << COLOR_END << '\n';
+    std::cerr << RED_FG << display[2] << COLOR_END;
 }

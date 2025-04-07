@@ -1,4 +1,4 @@
-//IDLENESS timelimit changed to 4 seconds.
+//finsihed??
 #include <signal.h>
 #include <spawn.h>
 #include <sys/types.h>
@@ -10,12 +10,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <optional>
-#include <ratio>
 #include <string>
 #include <thread>
 
 #include "../tools/Tester.hpp"
 #include "../util/include.hpp"
+
+using namespace std::chrono;
 
 //
 std::optional<status> Tester::loadBin() {
@@ -30,15 +31,16 @@ std::optional<status> Tester::loadBin() {
   int binStatus;
   auto start = std::chrono::high_resolution_clock::now();
   {
+    pid_t res;
     if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
       perror("posix failed");
       return result = status::PROCESSING_ERR;
     }
 
-    pid_t res;
     // check for idleness
     while ((res = waitpid(binID, &binStatus, WNOHANG)) == 0) {
-      if (std::chrono::high_resolution_clock::now() - start >= idleLimit) {
+      if (std::chrono::high_resolution_clock::now() - start >=
+          std::chrono::seconds(IDLE_LIMIT)) {
         kill(binID, SIGKILL);
         loaded = -1;
 
@@ -61,18 +63,21 @@ std::optional<status> Tester::loadBin() {
     }
   }
   auto end = std::chrono::high_resolution_clock::now();
-  showAnim.join();
 
   // can put more error handling here ...
   if (!WIFEXITED(binStatus)) {
     loaded = -1;
+
+    showAnim.join();
     if (WIFSIGNALED(binStatus)) {
       std::cerr << "child terminated by signal " << WTERMSIG(binStatus) << '\n';
     }
     return status::RUNTIME_ERR;
   } else {
-    std::cerr << WEXITSTATUS(binStatus) << '\n';
     loaded = 1;
+
+    showAnim.join();
+    std::cerr << GREEN_FG << WEXITSTATUS(binStatus) << COLOR_END << '\n';
   }
 
   runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)

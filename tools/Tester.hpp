@@ -1,5 +1,4 @@
 #pragma once
-#include <chrono>
 #include <optional>
 #include <string>
 
@@ -15,10 +14,13 @@
 // considering it runs pretty fast on system as compared on the judge ... this
 // is wrong man I need to check this shit.
 #define TIME_LIMIT std::chrono::milliseconds(50)
+#define IDLE_LIMIT 4
 
 // building, running, judging.
 class Tester {
  private:
+
+
   // Lines per testcase.
   int lpTestcase = 1;
 
@@ -46,7 +48,6 @@ class Tester {
   int waiting(pid_t childID);
 
  public:
-  std::chrono::seconds idleLimit = std::chrono::seconds(4);
   // assigns filename then calls build if set.
   Tester(int argc, char* argv[], std::string& cwd);
 
@@ -70,4 +71,5 @@ class Tester {
 
   // Possible unkonwn result, try to use only after tests have been done.
   status resultMU() { return result; }
+
 };

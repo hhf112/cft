@@ -18,3 +18,5 @@
 #define WHITE_ON_CYAN "\033[97;46m"
 
 #define BLACK_ON_WHITE "\033[90;47m"
+
+#define BLACK_ON_RED "\033[90;31m"

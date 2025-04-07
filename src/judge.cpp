@@ -20,7 +20,7 @@ int Tester::judge() {
       break;
 
     case status::WA:
-      std::cout << WHITE_ON_RED << "Wrong Answer" << COLOR_END << '\n';
+      std::cout << BLACK_ON_RED << "Wrong Answer" << COLOR_END << '\n';
       report << "WRONG ANSWER\n";
       std::cout << "verdict: test failed.\n";
       std::cout << failcnt << " test(s) failed\n";
@@ -60,7 +60,7 @@ int Tester::judge() {
 
   switch (timeLimit) {
     case warning::TLE:
-      std::cout << WHITE_ON_RED << "Warning: Possible TLE! :|" << COLOR_END
+      std::cout << BLACK_ON_RED << "Warning: Possible TLE! :|" << COLOR_END
                 << '\n';
       break;
     case warning::GOOD:
