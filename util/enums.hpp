@@ -16,6 +16,7 @@ enum class status {
   NILIO,
   UNKNOWN,
   PROCESSING_ERR,
+  IDLENESS,
 };
 
 enum class warning {

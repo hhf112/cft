@@ -3,6 +3,7 @@
 
 #include "./tools/include.hpp"
 #include "./util/include.hpp"
+#include "tools/Tester.hpp"
 
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path().string();
@@ -29,6 +30,12 @@ int main(int argc, char* argv[]) {
           std::cout << WHITE_ON_RED << "Runtime Error" << COLOR_END << '\n';
           std::cerr << "Inputted file exited abnomrally, tests terminated.\n";
           return 1;
+        case status::IDLENESS:
+          std::cerr << WHITE_ON_RED << "Idleness time limit exceeded!"
+                    << COLOR_END << '\n';
+                    std::cerr << "process did not any produce output for " << cftester.idleLimit.count() <<  " seconds \n";
+                    std::cerr << "\t  check for infnite loops or foregetting to output to stdout! \n";
+           return 1;
         default:
           return 0;
       }

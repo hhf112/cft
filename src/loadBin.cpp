@@ -1,3 +1,4 @@
+//IDLENESS timelimit changed to 4 seconds.
 #include <signal.h>
 #include <spawn.h>
 #include <sys/types.h>
@@ -9,6 +10,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <optional>
+#include <ratio>
 #include <string>
 #include <thread>
 
@@ -20,24 +22,46 @@ std::optional<status> Tester::loadBin() {
   pid_t binID;
   char* args[] = {filename.data(), nullptr};
 
-  if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
-    perror("posix failed");
-    return result = status::PROCESSING_ERR;
-  }
-
   auto disp = DISP_LOAD;
   auto frames = FR_BOXX;
-  std::thread showAnim{spinnerBool, std::ref(disp), std::ref(frames), std::ref(loaded)};
+  std::thread showAnim{spinnerBool, std::ref(disp), std::ref(frames),
+                       std::ref(loaded)};
 
   int binStatus;
   auto start = std::chrono::high_resolution_clock::now();
-  if (waitpid(binID, &binStatus, 0) < 0) {
-    loaded = -1;
-    // may or may not add detailed error cases here.
-    perror("wait failed");
-    return result = status::PROCESSING_ERR;
+  {
+    if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
+      perror("posix failed");
+      return result = status::PROCESSING_ERR;
+    }
+
+    pid_t res;
+    // check for idleness
+    while ((res = waitpid(binID, &binStatus, WNOHANG)) == 0) {
+      if (std::chrono::high_resolution_clock::now() - start >= idleLimit) {
+        kill(binID, SIGKILL);
+        loaded = -1;
+
+        showAnim.join();
+
+        waitpid(binID, nullptr, 0);  // reap it
+        return result = status::IDLENESS;
+      }
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(15));
+    }
+
+    if (res < 0) {
+      // may or may not add detailed error cases here.
+      perror("wait failed");
+      loaded = -1;
+
+      showAnim.join();
+      return result = status::PROCESSING_ERR;
+    }
   }
   auto end = std::chrono::high_resolution_clock::now();
+  showAnim.join();
 
   // can put more error handling here ...
   if (!WIFEXITED(binStatus)) {
@@ -47,16 +71,14 @@ std::optional<status> Tester::loadBin() {
     }
     return status::RUNTIME_ERR;
   } else {
-        std::cerr << WEXITSTATUS(binStatus) << '\n';
+    std::cerr << WEXITSTATUS(binStatus) << '\n';
     loaded = 1;
   }
 
   runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                 .count();
 
-  showAnim.join();
-
-  if (runtime >= TIME_LIMIT) timeLimit = warning::TLE;
+  if (runtime >= TIME_LIMIT.count()) timeLimit = warning::TLE;
 
   return {};
 }
