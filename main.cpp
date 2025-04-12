@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         case status::IDLENESS:
           std::cerr << BLACK_ON_RED << "Idleness time limit exceeded!"
                     << COLOR_END << '\n';
-                    std::cerr << "process did not any produce output for " << IDLE_LIMIT<<  " seconds \n";
+                    std::cerr << "process did not any produce output for " << IDLE_LIMIT.count()<<  " seconds \n";
                     std::cerr << "\t  check for infnite loops or foregetting to output to stdout! \n";
            return 1;
         default:

@@ -14,7 +14,8 @@
 // considering it runs pretty fast on system as compared on the judge ... this
 // is wrong man I need to check this shit.
 #define TIME_LIMIT std::chrono::milliseconds(50)
-#define IDLE_LIMIT 4
+#define IDLE_LIMIT std::chrono::seconds(4)
+#define POLLING_RATE std::chrono::milliseconds(15)
 
 // building, running, judging.
 class Tester {
@@ -57,7 +58,7 @@ class Tester {
   std::optional<buildErr> build();
 
   // spawns built binary then records runtime.
-  // possible error status handled in main.
+  // called by main.
   // currently doesn't detect idleness status.
   std::optional<status> loadBin();
 
@@ -66,7 +67,7 @@ class Tester {
   int judge();
 
   // Overwrites report.
-  // possible error status returned is handled by judge.
+  // called by judge.
   std::optional<status> runTests(std::ofstream& report);
 
   // Possible unkonwn result, try to use only after tests have been done.

@@ -1,4 +1,4 @@
-//finsihed??
+// finsihed??
 #include <signal.h>
 #include <spawn.h>
 #include <sys/types.h>
@@ -39,8 +39,7 @@ std::optional<status> Tester::loadBin() {
 
     // check for idleness
     while ((res = waitpid(binID, &binStatus, WNOHANG)) == 0) {
-      if (std::chrono::high_resolution_clock::now() - start >=
-          std::chrono::seconds(IDLE_LIMIT)) {
+      if (std::chrono::high_resolution_clock::now() - start >= IDLE_LIMIT) {
         kill(binID, SIGKILL);
         loaded = -1;
 
@@ -50,7 +49,7 @@ std::optional<status> Tester::loadBin() {
         return result = status::IDLENESS;
       }
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(15));
+      std::this_thread::sleep_for(POLLING_RATE);
     }
 
     if (res < 0) {
