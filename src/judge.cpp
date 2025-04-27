@@ -42,12 +42,9 @@ int Tester::judge() {
       std::cout << WHITE_ON_CYAN << "Processing Error" << COLOR_END << '\n';
       std::cout << "Unable to fetch required files.\n";
       return 1;
-
     default:
-      std::cout << BLACK_ON_WHITE << "Unknown error occured ..." << COLOR_END
-                << '\n';
+      std::cerr << "error in judging occured\n";
       return 1;
-      //
   }
 
   if (!runtime) {

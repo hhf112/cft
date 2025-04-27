@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <cassert>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
@@ -32,7 +33,7 @@ std::optional<status> Tester::loadBin() {
   auto start = std::chrono::high_resolution_clock::now();
   {
     pid_t res;
-    if (posix_spawn(&binID, filename.data(), NULL, NULL, args, NULL) != 0) {
+    if (posix_spawn(&binID, filename.c_str(), NULL, NULL, args, NULL) != 0) {
       perror("posix failed");
       return result = status::PROCESSING_ERR;
     }

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <optional>
 #include <string>
 
@@ -22,6 +23,9 @@ class Tester {
  private:
 
 
+  //export the built file to desired path.
+  std::optional<std::string> ship = "/mnt/d/";
+
   // Lines per testcase.
   int lpTestcase = 1;
 
@@ -43,10 +47,9 @@ class Tester {
   int loaded = 0;
   bool buildOn = 1;
 
-  bool testCompleteOne() { return ++cnt % lpTestcase == 0; }
+  bool doTest() { return ++cnt % lpTestcase == 0; }
 
-  // waits on and checks fro idleness in child process.
-  int waiting(pid_t childID);
+
 
  public:
   // assigns filename then calls build if set.

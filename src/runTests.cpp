@@ -4,41 +4,30 @@
 #include <string>
 
 #include "../tools/Tester.hpp"
+#include "../util/include.hpp"
 
 std::optional<status> Tester::runTests(std::ofstream& report) {
   if (!report || !loaded) return {};
   // files
-  std::ifstream output{"out.txt", std::ios::in};
-  std::ifstream actualOutput{"output.txt", std::ios::in};
-
-  if (!(output && actualOutput)) {
-    return {};
-  }
-
-  if (output.eof()) {
-    return result = status::NILIO;
-  }
+  FileIterator output{"out.txt"};
+  FileIterator actualOutput{"output.txt"};
 
   std::string compare;
   std::string actual;
-  std::string buf;
 
   std::cerr << BRIGHT_YELLOW_FG << "Judging...📜" << COLOR_END << '\n';
 
-  while (std::getline(output, buf)) {
-    compare += buf;
-    compare += '\n';
-    if (!std::getline(actualOutput, buf)) {
+        
+  while (output.fetchNext(compare)) {
+    if (!actualOutput.fetchNext(actual)) {
       return result = status::WRONG_OUTPUT;
     }
-    actual += buf;
-    actual += '\n';
 
-    if (testCompleteOne()) {
+    if (doTest()) { /*cnt is incremented here*/
       ++testcnt;
       report << "test " << testcnt << '\n';
-      report << compare;
-      report << "->\n" << actual << '\n';
+      report << compare << '\n';
+      report << "->\n" << actual << "\n\n";
 
       std::cerr << "test " << testcnt << ": ";
       if (compare != actual) {
@@ -50,16 +39,13 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
         std::cerr << GREEN_FG << "passed" << COLOR_END << '\n';
       }
     }
-
-    compare.clear();
-    actual.clear();
   }
 
   if (!cnt) {
     return result = status::NILIO;
   }
 
-  if (std::getline(actualOutput, buf)) {
+  if (actualOutput.fetchNext(actual)) {
     return result = status::WRONG_OUTPUT;
   }
 

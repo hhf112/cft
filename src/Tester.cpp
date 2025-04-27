@@ -25,7 +25,8 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
     int buildFinish = 0;
     auto disp = DISP_BUILD;
     auto frames = FR_EXPLODE;
-    std::thread startBuild(spinnerBool, std::ref(disp), std::ref(frames), std::ref(buildFinish));
+    std::thread startBuild(spinnerBool, std::ref(disp), std::ref(frames),
+                           std::ref(buildFinish));
 
     std::optional<buildErr> buildFail = build();
     if (!buildFail) {
@@ -40,15 +41,14 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
     switch (buildFail.value()) {
       case buildErr::PROCESSING_ERR:
         std::cerr << "Unable to fetch buildscripts. \n";
-        break;
+        exit(1);
       case buildErr::NULL_BS:
         std::cerr << RED_FG << "No buildsrcipts found!\n" << COLOR_END << '\n';
-        break;
+        exit(1);
 
       case buildErr::BUILD_FAIL:
         std::cerr << RED_FG << "Build failed\n" << COLOR_END << '\n';
-        break;
+        exit(1);
     }
-    exit(1);
   }
 }
