@@ -2,6 +2,7 @@ Work in Progress in author's free time.
 
 Currently only functions as a native linux CLI and only for C++ files. 
 
+- [ ] Railway server hosting with basic frontend for portable use.
 - [ ] Competitive Companion Orchestration
 - [ ] Configurable build flags
 - [ ] Configurable template
@@ -14,7 +15,7 @@ Currently only functions as a native linux CLI and only for C++ files.
 
 
 ## Usage 
-1. running `cft init <number>: 
+1. running `cft init` <number>: 
     1. creates <number> files with alphabetical filename (a.cpp, b.cpp, c.cpp ...) 
     2. creates:
         1. `input.txt`: input to run the binaries
@@ -31,7 +32,7 @@ Currently only functions as a native linux CLI and only for C++ files.
 ## Installation
 1. Download the prebuilt binary in `app/` directory and add it to your path.
 
-### OR
+#### OR
 
-2. Clone the repo and cd into it and run make.
+2. Clone the repo, cd into it and run `make` 
 
