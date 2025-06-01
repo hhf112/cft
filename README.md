@@ -11,12 +11,12 @@ Currently only functions as a native linux CLI and only for C++ files.
 - [x] run tests 
 - [x] ship built binary to convinient location for windows interface
 
-# CFTeser
+# CFTester
 
 
 ## Usage 
-1. running `cft init` <number>: 
-    1. creates <number> files with alphabetical filename (a.cpp, b.cpp, c.cpp ...) 
+1. running `cft init <number>`: 
+    1. creates `<number>` files with alphabetical filename (a.cpp, b.cpp, c.cpp ...) 
     2. creates:
         1. `input.txt`: input to run the binaries
         2.  `out.txt`: expected output
@@ -26,7 +26,9 @@ Currently only functions as a native linux CLI and only for C++ files.
 
 2. running `cft <filename of a .cpp without extension>` anywhere in your terminal: 
     1. builds a binary with the same name
-    2. runs the tests if `input.txt`, `out.txt`exist and are not empty.
+    2. copies the built binary to a convinient location for windows interface. (optional)
+    2. runs the tests if `input.txt`, `out.txt` exist and are not empty.
+    3. generates a log of tests in `report.txt` which compares outputs and test number.
 
 
 ## Installation
