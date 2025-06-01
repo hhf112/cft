@@ -1,17 +1,13 @@
-# Compiler & flags
 CXX := g++
-CXXFLAGS := -std=c++23 #And more if you wish
+CXXFLAGS := -std=c++23 
 
-# Directories and target
 MAKEFILE_DIR := $(shell pwd)
 BIN := ./app/cft
 
-# Source and object files
 SOURCES := $(wildcard ./src/*.cpp) ./util/misc.cpp ./main.cpp
 OBJECTS := $(SOURCES:.cpp=.o)
 
 
-#Sym-link to be created.
 SYM_LINK := /usr/local/bin/cft
 
 all: install

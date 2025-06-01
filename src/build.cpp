@@ -32,6 +32,7 @@ std::optional<buildErr> Tester::build() {
     return buildErr::PROCESSING_ERR;
   }
 
+    //Error handling to be added.
   if (!WIFEXITED(status)) {
     return buildErr::BUILD_FAIL;
   }

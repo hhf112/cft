@@ -1,0 +1,14 @@
+{
+  "name": "competitive-companion-example",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type" : "module",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^16.5.0",
+    "express": "^4.16.3"
+  }
+}
