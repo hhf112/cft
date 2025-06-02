@@ -1,4 +1,4 @@
-Work in Progress in author's free time.
+Work in Progress. Currently not under active development.
 
 Currently only functions as a native linux CLI and only for C++ files. 
 
