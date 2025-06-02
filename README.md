@@ -36,5 +36,7 @@ Currently only functions as a native linux CLI and only for C++ files.
 
 #### OR
 
-2. Clone the repo, cd into it and run `make` 
+2. Clone the repo, cd into it and run `make`
+#### build dependencies:
+- C++23
 
