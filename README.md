@@ -4,7 +4,7 @@ Not under active developement.
 - [ ] Configurability.
 - [x] build and run tests (error handling to be added. g++ error logs are displayed regardless)
 
-# CFTester
+# cft
 
 
 ## Usage 
