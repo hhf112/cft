@@ -1,4 +1,4 @@
-Not under active developement. Can expect occasional commits.
+Not under active developement. 
 
 - [ ] Automated test case fetching orchestration.
 - [ ] Configurability.
@@ -32,4 +32,5 @@ Not under active developement. Can expect occasional commits.
 2. Clone the repo, cd into it and run `make`
 #### build dependencies:
 - C++23
+- g++
 
