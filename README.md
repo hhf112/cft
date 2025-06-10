@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-Work in Progress for remaining features. Currently not under active development.
-=======
-Currently not under active developement. To be continued.
->>>>>>> 22aea1a (updated README.md)
+Not under active developement. Can expect occasional commits.
 
-Currently only functions as a native linux CLI and only for C++ files. 
-
-- [ ] Hosting with frontend for portable use.
 - [ ] Automated test case fetching orchestration.
 - [ ] Configurability.
 - [x] build and run tests (error handling to be added. g++ error logs are displayed regardless)
