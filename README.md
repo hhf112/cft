@@ -1,15 +1,15 @@
+<<<<<<< HEAD
 Work in Progress for remaining features. Currently not under active development.
+=======
+Currently not under active developement. To be continued.
+>>>>>>> 22aea1a (updated README.md)
 
 Currently only functions as a native linux CLI and only for C++ files. 
 
-- [ ] Railway server hosting with basic frontend for portable use.
-- [ ] Competitive Companion Orchestration
-- [ ] Configurable build flags
-- [ ] Configurable template
-- [ ] Configurable file I/O
-- [x] build .cpp files (error handling to be added. g++ error logs are displayed regardless)
-- [x] run tests 
-- [x] ship built binary to convinient location for windows interface
+- [ ] Hosting with frontend for portable use.
+- [ ] Automated test case fetching orchestration.
+- [ ] Configurability.
+- [x] build and run tests (error handling to be added. g++ error logs are displayed regardless)
 
 # CFTester
 
