@@ -1,4 +1,5 @@
-Not under active developement. 
+Occasional updates. <br>
+https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml
 
 - [ ] Automated test case fetching orchestration.
 - [ ] Configurability.
