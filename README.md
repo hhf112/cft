@@ -6,7 +6,7 @@ Occasional updates for features. <br>
 - [x] build and run tests (error handling to be added. g++ error logs are displayed regardless)
 
 # CFTester
-[!build status](https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml) <br>
+<img src ="https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml" alt="build status"> <br>
 .cpp file workflow for running I/O tests focused towards CP. 
 
 ## Usage 
