@@ -47,7 +47,7 @@ class Tester {
   int loaded = 0;
   bool buildOn = 1;
 
-  bool doTest() { return ++cnt % lpTestcase == 0; }
+  bool isFullTest() { return ++cnt % lpTestcase == 0; }
 
 
 
