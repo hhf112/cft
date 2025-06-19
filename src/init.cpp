@@ -17,7 +17,7 @@ Init::Init(int argc, char *argv[]) {
       !std::ofstream{"out.txt", std::ios::out} ||
       !std::ofstream{"report.txt", std::ios::out}) {
     status = 1;
-    std::cerr << RED_FG << "Unsuccessfull!\n" << COLOR_END;
+    std::cerr << RED_FG << "init: unsuccessfull!\n" << COLOR_END;
     return;
   }
 
@@ -34,7 +34,7 @@ Init::Init(int argc, char *argv[]) {
   std::cout << "Loading template ... \n";
   std::ifstream templateF{templ, std::ios::in};
   if (!templateF) {
-    std::cerr << RED_FG << "Template not found!" << COLOR_END << '\n';
+    std::cerr << RED_FG << "init: template not found!" << COLOR_END << '\n';
     return;
   }
 }

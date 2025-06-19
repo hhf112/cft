@@ -16,19 +16,19 @@
 
 extern char** environ;
 std::optional<buildErr> Tester::build() {
-  std::string sourcefile = filename + ".cpp";
+  std::string sourcefile = m_filename + ".cpp";
   char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-o",
-                  (char*)filename.c_str(), NULL};
+                  (char*)m_filename.c_str(), NULL};
 
   pid_t buildID;
   if (posix_spawnp(&buildID, "g++", NULL, NULL, args, environ) != 0) {
-    perror("posix failed");
+    perror("build: posix failed");
     return buildErr::PROCESSING_ERR;
   }
 
   int status;
   if (waitpid(buildID, &status, 0) < 0) {
-    perror("wait failed");
+    perror("build: wait failed");
     return buildErr::PROCESSING_ERR;
   }
 
@@ -37,9 +37,9 @@ std::optional<buildErr> Tester::build() {
     return buildErr::BUILD_FAIL;
   }
 
-  if (ship) {
+  if (m_ship) {
     std::fstream readsrc{sourcefile, std::ios::in};
-    std::fstream cp{ship.value() + "ship.cpp", std::ios::out};
+    std::fstream cp{m_ship.value() + "ship.cpp", std::ios::out};
 
     if (!readsrc || !cp)
       std::cerr << "Unable to ship!\n";

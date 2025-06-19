@@ -16,12 +16,12 @@
 #include "../util/include.hpp"
 
 Tester::Tester(int argc, char* argv[], std::string& cwd)
-    : filename{std::move(cwd)} {
-  filename += '/';
-  filename += argv[1];
-  lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
+    : m_filename{std::move(cwd)} {
+  m_filename += '/';
+  m_filename += argv[1];
+  m_lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
 
-  if (buildOn) {
+  if (m_buildOn) {
     int buildFinish = 0;
     auto disp = DISP_BUILD;
     auto frames = FR_EXPLODE;
@@ -40,14 +40,14 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
 
     switch (buildFail.value()) {
       case buildErr::PROCESSING_ERR:
-        std::cerr << "Unable to fetch buildscripts. \n";
+        std::cerr << "tester: unable to fetch buildscripts. \n";
         exit(1);
       case buildErr::NULL_BS:
-        std::cerr << RED_FG << "No buildsrcipts found!\n" << COLOR_END << '\n';
+        std::cerr << RED_FG << "tester: no buildsrcipts found!\n" << COLOR_END << '\n';
         exit(1);
 
       case buildErr::BUILD_FAIL:
-        std::cerr << RED_FG << "Build failed\n" << COLOR_END << '\n';
+        std::cerr << RED_FG << "tester: build failed\n" << COLOR_END << '\n';
         exit(1);
     }
   }

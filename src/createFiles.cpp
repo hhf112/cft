@@ -18,7 +18,7 @@ int Init::createFiles() {
 
   std::ifstream templateStream{templ, std::ios::in};
   if (!templateStream) {
-    std::cerr << "ERR: Failed to load template \n";
+    std::cerr << "createfiles: ERR: Failed to load template \n";
     return 1;
   }
 
@@ -32,7 +32,7 @@ int Init::createFiles() {
     std::ofstream f{fl, std::ios::out};
     if (!f) {
       std::cerr << RED_FG
-                << "ERR: Failed to create specified count of files. \n"
+                << "createfiles: ERR: Failed to create specified count of files. \n"
                 << COLOR_END;
       return 1;
     }
@@ -40,7 +40,7 @@ int Init::createFiles() {
     f << templateStream.rdbuf();
     if (f.fail()) {
       std::cerr << RED_FG
-                << "Unknown error occured while copying the template. \n"
+                << "createfiles: Unknown error occured while copying the template. \n"
                 << COLOR_END;
       return 1;
     }

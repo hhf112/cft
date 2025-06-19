@@ -24,30 +24,30 @@ class Tester {
 
 
   //export the built file to desired path.
-  std::optional<std::string> ship = "/mnt/d/";
+  std::optional<std::string> m_ship = "/mnt/d/";
 
   // Lines per testcase.
-  int lpTestcase = 1;
+  int m_lpTestcase = 1;
 
   // null if binary not loaded
-  std::optional<int> runtime;
+  std::optional<int> m_runtime;
 
   // Total number of lines in expected output.
-  int cnt = 0;
+  int m_cnt = 0;
 
-  int failcnt = 0;
-  int testcnt = 0;
+  int m_failcnt = 0;
+  int m_testcnt = 0;
 
   // binary name, will have no trailing extensions.
-  std::string filename;
+  std::string m_filename;
 
-  status result = status::UNKNOWN;
-  warning timeLimit = warning::GOOD;  // heh
+  status m_result = status::UNKNOWN;
+  warning m_timeLimit = warning::GOOD;  // heh
 
-  int loaded = 0;
-  bool buildOn = 1;
+  int m_loaded = 0;
+  bool m_buildOn = 1;
 
-  bool isFullTest() { return ++cnt % lpTestcase == 0; }
+  bool isFullTest() { return ++m_cnt % m_lpTestcase == 0; }
 
 
 
@@ -74,6 +74,6 @@ class Tester {
   std::optional<status> runTests(std::ofstream& report);
 
   // Possible unkonwn result, try to use only after tests have been done.
-  status resultMU() { return result; }
+  status resultMU() { return m_result; }
 
 };
