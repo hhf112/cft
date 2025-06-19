@@ -32,9 +32,11 @@ std::optional<buildErr> Tester::build() {
     return buildErr::PROCESSING_ERR;
   }
 
-    //Error handling to be added.
-  if (!WIFEXITED(status)) {
-    return buildErr::BUILD_FAIL;
+  if (WIFEXITED(status))
+    std::cerr << "exit status: " << WEXITSTATUS(status) <<  '\n';
+  else {
+    std::cerr << "build: unknown error occured\n" << '\n';
+    return buildErr::PROCESSING_ERR;
   }
 
   if (m_ship) {

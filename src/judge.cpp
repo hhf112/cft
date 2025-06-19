@@ -6,13 +6,13 @@
 
 int Tester::judge() {
   std::ofstream report{"report.txt", std::ios::out};
-  if (!runTests(report)) result = status::PROCESSING_ERR;
+  if (!runTests(report)) m_result = status::PROCESSING_ERR;
 
   // FINAL VERDICT
   report << "FINAL VERDICT: \n";
 
   std::cout << '\n';
-  switch (result) {
+  switch (m_result) {
     case status::AC:
       std::cout << WHITE_ON_GREEN << "Accepted" << COLOR_END << '\n';
       report << "All tests passed!\n";
@@ -23,7 +23,7 @@ int Tester::judge() {
       std::cout << BLACK_ON_RED << "Wrong Answer" << COLOR_END << '\n';
       report << "WRONG ANSWER\n";
       std::cout << "verdict: test failed.\n";
-      std::cout << failcnt << " test(s) failed\n";
+      std::cout << m_failcnt << " test(s) failed\n";
       break;
 
     case status::NILIO:
@@ -47,15 +47,15 @@ int Tester::judge() {
       return 1;
   }
 
-  if (!runtime) {
+  if (!m_runtime) {
     std::cerr << "Runtime not evaluated due to invalid binary run. \n";
     return 1;
   }
 
-  report << "runtime: " << runtime.value() << " ms.\n";
-  std::cout << "runtime: " << runtime.value() << " ms.\n";
+  report << "runtime: " << m_runtime.value() << " ms.\n";
+  std::cout << "runtime: " << m_runtime.value() << " ms.\n";
 
-  switch (timeLimit) {
+  switch (m_timeLimit) {
     case warning::TLE:
       std::cout << BLACK_ON_RED << "Warning: Possible TLE! :|" << COLOR_END
                 << '\n';

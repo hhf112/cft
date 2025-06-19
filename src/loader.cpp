@@ -6,8 +6,9 @@
 #include <sys/wait.h>      // for wait
 #include <unistd.h>        // for pipe()
 
-#include <chrono>      // for std::chrono
-#include <cstdio>      // for perror()
+#include <chrono>  // for std::chrono
+#include <cstdio>  // for perror()
+#include <cstdlib>
 #include <functional>  // for std::ref()
 #include <iostream>    // for std::cerr
 #include <optional>    // for std::optional
@@ -27,7 +28,7 @@ std::optional<status> Tester::loadBin() {
   std::thread showAnim{spinnerBool, std::ref(disp), std::ref(frames),
                        std::ref(m_loaded)};
 
-  int binStatus;
+  int wstatus = 0;
   {
     int pipe_fd[2];
     pipe(pipe_fd);
@@ -60,8 +61,8 @@ std::optional<status> Tester::loadBin() {
     }
 
     auto cleanup = [&]() {
+      m_loaded = 1;
       showAnim.join();
-      close(pipe_fd[0]);
       close(pipe_fd[1]);
       close(input_fd);
       posix_spawn_file_actions_destroy(&actions);
@@ -87,18 +88,18 @@ std::optional<status> Tester::loadBin() {
       perror("loader: posix failed");
       return m_result = status::PROCESSING_ERR;
     }
+    close(pipe_fd[0]);
 
-    if (sendfile(pipe_fd[1], input_fd, 0, SIZE_MAX) == -1) {
+    if (splice(input_fd, NULL, pipe_fd[1], NULL, SIZE_MAX, 0) == -1) {
       cleanup();
-      perror("sendfile failed");
+      perror("loader: sendfile failed");
       kill(binID, SIGKILL);
       waitpid(binID, nullptr, 0);
       return status::PROCESSING_ERR;
     }
-    close(input_fd);
 
-    pid_t wait_status;
-    while ((wait_status = waitpid(binID, &binStatus, WNOHANG)) == 0) {
+    pid_t waiting;
+    while ((waiting = waitpid(binID, &wstatus, WNOHANG)) == 0) {
       // will be implementing itimer for this.
       if (std::chrono::high_resolution_clock::now() - start >= IDLE_LIMIT) {
         kill(binID, SIGKILL);
@@ -107,11 +108,11 @@ std::optional<status> Tester::loadBin() {
         waitpid(binID, nullptr, 0);
         return m_result = status::IDLENESS;
       }
-
       std::this_thread::sleep_for(POLLING_RATE);
     }
 
-    if (wait_status < 0) {
+    // close(input_fd);
+    if (waiting < 0) {
       perror("wait failed");
       m_loaded = -1;
       showAnim.join();
@@ -123,20 +124,22 @@ std::optional<status> Tester::loadBin() {
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
             .count();
   }
-  if (WIFSIGNALED(binStatus)) {
+
+  if (WIFSIGNALED(wstatus)) {
     m_loaded = -1;
-    std::cerr << "loader: child terminated by signal " << WTERMSIG(binStatus)
+    std::cerr << "loader: child terminated by signal " << WTERMSIG(wstatus)
               << '\n';
     return status::RUNTIME_ERR;
   }
-  if (WIFSTOPPED(binStatus)) {
+  if (WIFSTOPPED(wstatus)) {
     m_loaded = -1;
-    std::cerr << "loader: child stopped by signal " << WSTOPSIG(binStatus)
+    std::cerr << "loader: child stopped by signal " << WSTOPSIG(wstatus)
               << '\n';
     return status::RUNTIME_ERR;
   }
   m_loaded = 1;
-  std::cerr << GREEN_FG << WEXITSTATUS(binStatus) << COLOR_END << '\n';
+  if (WIFEXITED(wstatus))
+    std::cerr <<  "exit status: " << WEXITSTATUS(wstatus) << '\n';
   if (m_runtime >= TIME_LIMIT.count()) m_timeLimit = warning::TLE;
 
   return {};

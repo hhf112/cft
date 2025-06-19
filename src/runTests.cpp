@@ -7,7 +7,7 @@
 #include "../util/include.hpp"
 
 std::optional<status> Tester::runTests(std::ofstream& report) {
-  if (!report || !loaded) return {};
+  if (!report || !m_loaded) return {};
   FileIterator output{"out.txt"};
   FileIterator actualOutput{"output.txt"};
 
@@ -19,19 +19,19 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
         
   while (output.fetchNext(compare)) {
     if (!actualOutput.fetchNext(actual)) {
-      return result = status::WRONG_OUTPUT;
+      return m_result = status::WRONG_OUTPUT;
     }
 
     if (isFullTest()) {
-      ++testcnt;
-      report << "test " << testcnt << '\n';
+      ++m_testcnt;
+      report << "test " << m_testcnt << '\n';
       report << compare << '\n';
       report << "->\n" << actual << "\n\n";
 
-      std::cerr << "test " << testcnt << ": ";
+      std::cerr << "test " << m_testcnt << ": ";
       if (compare != actual) {
-        result = status::WA;
-        failcnt++;
+        m_result = status::WA;
+        m_failcnt++;
         report << "FAILED\n\n";
         std::cerr << RED_FG << "failed" << COLOR_END << '\n';
       } else {
@@ -40,15 +40,15 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
     }
   }
 
-  if (!cnt) {
-    return result = status::NILIO;
+  if (!m_cnt) {
+    return m_result = status::NILIO;
   }
 
   if (actualOutput.fetchNext(actual)) {
-    return result = status::WRONG_OUTPUT;
+    return m_result = status::WRONG_OUTPUT;
   }
 
-  if (result == status::UNKNOWN) return result = status::AC;
+  if (m_result == status::UNKNOWN) return m_result = status::AC;
 
-  return result;
+  return m_result;
 }

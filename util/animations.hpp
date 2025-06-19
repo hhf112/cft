@@ -4,9 +4,9 @@
 #define vcs std::vector<std::string>
 
 
-// Display stetements.
-#define DISP_BUILD arrs3{BRIGHT_YELLOW_FG "building ...", "✅ build finished successfully" COLOR_END "\n", "❌ build failed!" COLOR_END "\n"}
-#define DISP_LOAD arrs3{BRIGHT_YELLOW_FG "Running ...", "✅ binary exited with code " COLOR_END, "❌ failed to load binary!"  COLOR_END "\n"}
+// Display stetements
+#define DISP_BUILD arrs3{BRIGHT_YELLOW_FG "building ...", "✅ build finished successfully" COLOR_END "\n", "❌ build failed!" COLOR_END}
+#define DISP_LOAD arrs3{BRIGHT_YELLOW_FG "Running ...", "✅ binary exited with code " COLOR_END, "❌ failed to load binary!"  COLOR_END}
 
 
 //Frames

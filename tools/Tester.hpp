@@ -48,6 +48,7 @@ class Tester {
   bool m_buildOn = 1;
 
   bool isFullTest() { return ++m_cnt % m_lpTestcase == 0; }
+  int runBin();
 
 
 
