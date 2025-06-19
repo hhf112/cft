@@ -8,7 +8,6 @@
 
 std::optional<status> Tester::runTests(std::ofstream& report) {
   if (!report || !loaded) return {};
-  // files
   FileIterator output{"out.txt"};
   FileIterator actualOutput{"output.txt"};
 
@@ -23,7 +22,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
       return result = status::WRONG_OUTPUT;
     }
 
-    if (doTest()) { /*cnt is incremented here*/
+    if (isFullTest()) {
       ++testcnt;
       report << "test " << testcnt << '\n';
       report << compare << '\n';
