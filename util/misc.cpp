@@ -19,7 +19,7 @@ std::string lowerCase(std::string& s) {
 }
 
 void spinnerBool(std::array<std::string, 3>& display,
-             std::vector<std::string>& frames, int& done) {
+                 std::vector<std::string>& frames, int& done) {
   int frm = frames.size();
   int i = 0;
   while (!done) {
@@ -30,7 +30,7 @@ void spinnerBool(std::array<std::string, 3>& display,
   }
 
   if (done > 0)
-    std::cerr << GREEN_FG << display[1] << COLOR_END;
+    std::cerr << GREEN_FG << display[1] << COLOR_END << '\n';
   else
-    std::cerr << RED_FG << display[2] << COLOR_END;
+    std::cerr << RED_FG << display[2] << COLOR_END << '\n';
 }
