@@ -5,8 +5,7 @@ Occasional updates for features. <br>
 - [ ] Configurability.
 - [x] build and run tests (error handling to be added. g++ error logs are displayed regardless)
 
-# CFTester
-<img src ="https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml" alt="build status"> <br>
+# CFTester <img src ="https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml" alt="build status">
 .cpp file workflow for running I/O tests focused towards CP. 
 
 ## Usage 
