@@ -19,12 +19,11 @@ init [n]            touch input.txt
                     touch report.txt
                     create cl 
                     create [n] ./[a-zA-Z].cpp template(s) 
-                    by default n = 1
+                     default n = 1
 
-<file>              build ./<file>.cpp
-                    run ./<file>.cpp
-                    run tests on ./<file>.cpp
-                    logs in terminal and report.txt
+<name>              build ./<name>.cpp
+                    run tests -> ./<name>.cpp
+                    logs: terminal and report.txt
 ```
 
 ## Installation
