@@ -1,6 +1,5 @@
 #include <filesystem>
 #include <iostream>
-#include <system_error>
 
 #include "./tools/include.hpp"
 #include "./util/include.hpp"
