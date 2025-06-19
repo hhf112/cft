@@ -19,7 +19,7 @@ init [n]            touch input.txt
                     touch output.txt
                     touch report.txt
                     create cl 
-                    create [n] ./[a-z].cpp template(s) 
+                    create [n] ./[a-zA-Z].cpp template(s) 
                     by default n = 1
 
 <file>              build ./<file>.cpp
