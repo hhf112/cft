@@ -16,6 +16,7 @@
 #include "../tools/Tester.hpp"
 #include "../util/include.hpp"
 
+// right now as macros. configuration will be added.
 #define INPUT_FILE "input.txt"
 #define OUTPUT_FILE "output.txt"
 
