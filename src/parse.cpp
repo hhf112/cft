@@ -14,8 +14,8 @@ Parse::Parse(int argc, char* argv[]) {
       std::string arg(argv[1]);
       std::string num(argv[2]);
       if (decode(argv[1], 3) != query::INIT) {
-        std::cerr
-            << "parse: Invalid input. CFTester can only test 1 file at a time.\n";
+        std::cerr << "parse: Invalid input. CFTester can only test 1 file at a "
+                     "time.\n";
         exit(1);
       }
 
@@ -28,7 +28,8 @@ Parse::Parse(int argc, char* argv[]) {
     }
     default:
       std::cerr << BLACK_ON_WHITE
-                << "parse: Invalid number of arguments provided." COLOR_END << '\n';
+                << "parse: Invalid number of arguments provided." COLOR_END
+                << '\n';
       std::cerr << "Try:\n cft <filename> \n cft init \n "
                    "cft init 3 \n cft cl\n";
       exit(1);
