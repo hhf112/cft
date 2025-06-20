@@ -6,24 +6,17 @@
 
 #include "../util/include.hpp"
 
-
-//create files, template processing,
 class Init {
  private:
-  int files = 1;
-  int status = 0;
+  int m_files = 1;
+  int m_status = 0;
 
-  const std::string curdir;
-  std::string cleanfs;
-  std::string templ;
+  const std::string m_curdir;
+  std::string m_cleanfs;
+  std::string m_templ;
 
  public:
-  //flushes IO files and loads the tepmplate path if a valid template is found.
   Init(int argc, char *argv[]);
-
-  //Creates filea as specified by files and also initializes cleanfs.
   int createFiles();
-
-  //Self descriptive.
   int configTempl();
 };

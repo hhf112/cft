@@ -7,9 +7,8 @@
 
 #include "./tools/include.hpp"
 #include "./util/include.hpp"
-#include "tools/Tester.hpp"
+#include "./tools/Tester.hpp"
 
-//
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path().string();
 
@@ -22,7 +21,7 @@ int main(int argc, char* argv[]) {
       auto disp = DISP_LOAD;
       auto frames = FR_BOXX;
       std::thread showAnim{spinnerBool, std::ref(disp), std::ref(frames),
-                           std::ref(cftester.getLoadedRef())};
+                           std::ref(cftester.get_loaded_ref())};
       std::optional<status> failedrun = cftester.load_bin();
       showAnim.join();
 

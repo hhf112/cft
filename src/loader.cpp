@@ -29,7 +29,7 @@ void handler(int sig_id) {
 
 std::optional<status> Tester::load_bin() {
   int wstatus = 0;
-  std::optional<status> failedrun = run_bin(wstatus);
+  std::optional<status> failedrun = m_run_bin(wstatus);
   if (failedrun) return failedrun.value();
 
   if (WIFSIGNALED(wstatus)) {
@@ -59,7 +59,7 @@ void close_pipe(int pipe_fd[2]) {
   close(pipe_fd[1]);
 }
 
-std::optional<status> Tester::run_bin(int& wstatus) {
+std::optional<status> Tester::m_run_bin(int& wstatus) {
   int pipe_fd[2];
   if (pipe(pipe_fd) == -1) {
     perror("loader: could not create a pipe to child process");

@@ -22,7 +22,7 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
   m_filename += argv[1];
   m_lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
 
-  if (m_buildOn) {
+  if (m_isbuild) {
     int buildFinish = 0;
     auto disp = DISP_BUILD;
     auto frames = FR_EXPLODE;
@@ -107,7 +107,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
     if (!actualOutput.fetchNext(actual)) {
       return m_result = status::WRONG_OUTPUT;
     }
-    if (isFullTest()) {
+    if (m_isFullTest()) {
       ++m_testcnt;
       report << "test " << m_testcnt << '\n';
       report << compare << '\n';
