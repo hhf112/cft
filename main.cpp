@@ -1,3 +1,5 @@
+#include <unistd.h>  // for types
+
 #include <filesystem>  // for std::filesystem
 #include <functional>  // std::functional
 #include <iostream>    // for std::cerr
