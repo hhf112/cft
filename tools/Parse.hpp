@@ -1,22 +1,16 @@
 #pragma once
 
-#include <algorithm>
-#include <iterator>
-#include <optional>
-#include <string>
+#include <algorithm>  // fro std::transform
+#include <iterator>   // std::back_inserter
+#include <optional>   // for std::optional
+#include <string>     // for std::string
 
 #include "../util/include.hpp"
 
-// oarse cli arguments,
 class Parse {
  private:
   query action;
-
-  // returns query based on a specific part of the argueent, orchestrated and
-  // called in constructor.
   std::optional<query> m_decode(std::string cs, int argno);
-
-  // used by decode.
   std::string m_lowerCase(std::string& s) {
     std::string lower{};
     std::transform(s.begin(), s.end(), std::back_inserter(lower),
@@ -25,9 +19,6 @@ class Parse {
   }
 
  public:
-  // sets action.
   Parse(int argc, char* argv[]);
-
-  // self descriptive.
-  query m_whichAction() { return action; }
+  query whichAction() { return action; }
 };
