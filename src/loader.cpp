@@ -19,6 +19,7 @@
 #include "../util/include.hpp"
 
 #define INPUT_FILE "input.txt"
+#define OUTPUT_FILE "output.txt"
 using namespace std::chrono;
 
 //
@@ -45,10 +46,11 @@ std::optional<status> Tester::loadBin() {
     posix_spawn_file_actions_t actions;
 
     int input_fd = open(INPUT_FILE, O_RDONLY);
-    if (input_fd == -1) {
+    int output_fd = open(OUTPUT_FILE, O_CREAT | O_WRONLY | O_TRUNC);
+    if (input_fd == -1 || output_fd == -1) {
       showAnim.join();
       close_pipe();
-      perror("loader: failed to open input file");
+      perror("loader: failed to open input or output file");
       return status::PROCESSING_ERR;
     }
 
@@ -71,12 +73,14 @@ std::optional<status> Tester::loadBin() {
     if (posix_spawn_file_actions_adddup2(&actions, pipe_fd[0], STDIN_FILENO) !=
         0) {
       cleanup();
-      perror("dup2 failed");
+      perror("dup2 failed for input pipe");
       return status::PROCESSING_ERR;
     }
-    if (posix_spawn_file_actions_addclose(&actions, pipe_fd[1]) != 0) {
+
+    if (posix_spawn_file_actions_adddup2(&actions, output_fd, STDOUT_FILENO) !=
+        0) {
       cleanup();
-      perror("close failed");
+      perror("dup2 failed for output pipe");
       return status::PROCESSING_ERR;
     }
 
@@ -111,7 +115,7 @@ std::optional<status> Tester::loadBin() {
       std::this_thread::sleep_for(POLLING_RATE);
     }
 
-    // close(input_fd);
+    close(output_fd);
     if (waiting < 0) {
       perror("wait failed");
       m_loaded = -1;
@@ -139,7 +143,7 @@ std::optional<status> Tester::loadBin() {
   }
   m_loaded = 1;
   if (WIFEXITED(wstatus))
-    std::cerr <<  "exit status: " << WEXITSTATUS(wstatus) << '\n';
+    std::cerr << "exit status: " << WEXITSTATUS(wstatus) << '\n';
   if (m_runtime >= TIME_LIMIT.count()) m_timeLimit = warning::TLE;
 
   return {};
