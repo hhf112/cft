@@ -32,6 +32,6 @@ init [n]            touch input.txt
 #### OR
 2. Clone the repo, cd into it and run `make`
 #### build dependencies:
-- C++23
+- c++20
 - g++
 
