@@ -3,7 +3,7 @@ Occasional updates for features. <br>
 
 - [ ] Automated test case fetching orchestration.
 - [ ] Configurability.
-- [x] build and run tests (error handling to be added. g++ error logs are displayed regardless)
+- [x] build and run tests
 
 # CFTester <img src ="https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml" alt="build status">
 .cpp file workflow for running I/O tests focused towards CP. 
@@ -19,7 +19,7 @@ init [n]            touch input.txt
                     touch report.txt
                     create cl 
                     create [n] ./[a-zA-Z].cpp template(s) 
-                     default n = 1
+                    default n = 1
 
 <name>              build ./<name>.cpp
                     run tests -> ./<name>.cpp
