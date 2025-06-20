@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -std=c++23  -g
+CXXFLAGS := -std=c++20  -g
 
 MAKEFILE_DIR := $(shell pwd)
 BIN := ./app/cft
