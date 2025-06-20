@@ -55,10 +55,9 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
   }
 }
 
-extern char** environ;
 std::optional<buildErr> Tester::build() {
   std::string sourcefile = m_filename + ".cpp";
-  char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-o",
+  char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-std=c++23", (char*)"-o",
                   (char*)m_filename.c_str(), NULL};
   pid_t build_id;
   if (posix_spawnp(&build_id, "g++", NULL, NULL, args, environ) != 0) {

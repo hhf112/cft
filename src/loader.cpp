@@ -62,6 +62,7 @@ void close_pipe(int pipe_fd[2]) {
 std::optional<status> Tester::m_run_bin(int& wstatus) {
   int pipe_fd[2];
   if (pipe(pipe_fd) == -1) {
+    m_loaded = -1;
     perror("loader: could not create a pipe to child process");
     return status::PROCESSING_ERR;
   }
@@ -71,6 +72,7 @@ std::optional<status> Tester::m_run_bin(int& wstatus) {
   int output_fd = open(OUTPUT_FILE, O_CREAT | O_WRONLY | O_TRUNC,
                        S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
   if (input_fd == -1 || output_fd == -1) {
+    m_loaded = -1;
     close_pipe(pipe_fd);
     perror("loader: failed to open input or output file");
     return status::PROCESSING_ERR;
@@ -78,6 +80,7 @@ std::optional<status> Tester::m_run_bin(int& wstatus) {
 
   posix_spawn_file_actions_t actions;
   if (posix_spawn_file_actions_init(&actions) != 0) {
+    m_loaded = -1;
     close_pipe(pipe_fd);
     close(input_fd);
     close(output_fd);
