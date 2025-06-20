@@ -19,21 +19,21 @@ std::optional<buildErr> Tester::build() {
   std::string sourcefile = m_filename + ".cpp";
   char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-o",
                   (char*)m_filename.c_str(), NULL};
-
-  pid_t buildID;
-  if (posix_spawnp(&buildID, "g++", NULL, NULL, args, environ) != 0) {
+  pid_t build_id;
+  if (posix_spawnp(&build_id, "g++", NULL, NULL, args, environ) != 0) {
     perror("build: posix failed");
     return buildErr::PROCESSING_ERR;
   }
-
   int status;
-  if (waitpid(buildID, &status, 0) < 0) {
+  if (waitpid(build_id, &status, 0) < 0) {
     perror("build: wait failed");
     return buildErr::PROCESSING_ERR;
   }
 
   if (WIFEXITED(status))
-    std::cerr << BRIGHT_YELLOW_FG << "build exit status: " <<  WEXITSTATUS(status) << COLOR_END << '\n';
+    std::cerr << BRIGHT_YELLOW_FG
+              << "build exit status: " << WEXITSTATUS(status) << COLOR_END
+              << '\n';
   else {
     std::cerr << "build: unknown error occured\n" << '\n';
     return buildErr::PROCESSING_ERR;
