@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <optional>
 #include <string>
 
@@ -21,9 +20,7 @@
 // building, running, judging.
 class Tester {
  private:
-
-
-  //export the built file to desired path.
+  // export the built file to desired path.
   std::optional<std::string> m_ship = "/mnt/d/";
 
   // Lines per testcase.
@@ -48,13 +45,13 @@ class Tester {
   bool m_buildOn = 1;
 
   bool isFullTest() { return ++m_cnt % m_lpTestcase == 0; }
-  int runBin();
-
-
+  std::optional<status> run_bin(int& wstatus);
 
  public:
   // assigns filename then calls build if set.
   Tester(int argc, char* argv[], std::string& cwd);
+
+  int& getLoadedRef() { return m_loaded; }
 
   // currently spawns the generic cpp build script on the filename + ".cpp"
   // returns build status.
@@ -64,7 +61,7 @@ class Tester {
   // spawns built binary then records runtime.
   // called by main.
   // currently doesn't detect idleness status.
-  std::optional<status> loadBin();
+  std::optional<status> load_bin();
 
   // calls runTests then passes verdict based on report.
   // exits 1 after handling possible errors.
@@ -76,5 +73,4 @@ class Tester {
 
   // Possible unkonwn result, try to use only after tests have been done.
   status resultMU() { return m_result; }
-
 };

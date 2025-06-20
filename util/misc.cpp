@@ -23,14 +23,14 @@ void spinnerBool(std::array<std::string, 3>& display,
   int frm = frames.size();
   int i = 0;
   while (!done) {
-    std::cerr << BRIGHT_YELLOW_FG << display[0] << COLOR_END << frames[i % frm]
+    std::cerr << BRIGHT_YELLOW_FG << display[0] << frames[i % frm]
               << '\r';
     i++;
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
   if (done > 0)
-    std::cerr << GREEN_FG << display[1] << COLOR_END << '\n';
+    std::cerr << GREEN_FG << display[1];
   else
-    std::cerr << RED_FG << display[2] << COLOR_END << '\n';
+    std::cerr << RED_FG << display[2];
 }

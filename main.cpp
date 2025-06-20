@@ -1,5 +1,7 @@
-#include <filesystem>
-#include <iostream>
+#include <filesystem>  // for std::filesystem
+#include <functional>  // std::functional
+#include <iostream>    // for std::cerr
+#include <thread>      // for std::thread
 
 #include "./tools/include.hpp"
 #include "./util/include.hpp"
@@ -9,13 +11,18 @@
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path().string();
 
-  // All possible argument checks are done in Parser.hpp.
   Parse inputTokens(argc, argv);
 
   switch (inputTokens.whichAction()) {
     case query::JUDGE: {
       Tester cftester(argc, argv, curdir);
-      std::optional<status> failedrun = cftester.loadBin();
+
+      auto disp = DISP_LOAD;
+      auto frames = FR_BOXX;
+      std::thread showAnim{spinnerBool, std::ref(disp), std::ref(frames),
+                           std::ref(cftester.getLoadedRef())};
+      std::optional<status> failedrun = cftester.load_bin();
+      showAnim.join();
 
       if (!failedrun) {
         cftester.judge();

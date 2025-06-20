@@ -1,20 +1,19 @@
 #include "../tools/Tester.hpp"
 
-#include <spawn.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
+#include <spawn.h> // for posix 
+#include <sys/types.h> // for types
+#include <sys/wait.h> // for waitpid
+#include <unistd.h> // for types
 
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <optional>
-#include <string>
-#include <thread>
+#include <cstdlib> // for exit()
+#include <iostream> // for std::cerr
+#include <optional> // for std::optional
+#include <string> // for std::string
+#include <thread> // for std::thread
 
 #include "../util/include.hpp"
 
+//
 Tester::Tester(int argc, char* argv[], std::string& cwd)
     : m_filename{std::move(cwd)} {
   m_filename += '/';

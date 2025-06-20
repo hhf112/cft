@@ -5,8 +5,9 @@
 
 
 // Display stetements
-#define DISP_BUILD arrs3{BRIGHT_YELLOW_FG "building ...", "✅ build finished successfully" COLOR_END "\n", "❌ build failed!" COLOR_END}
-#define DISP_LOAD arrs3{BRIGHT_YELLOW_FG "Running ...", " binary exited with code " COLOR_END, "❌ failed to load binary!"  COLOR_END}
+#define DISP_BUILD arrs3{BRIGHT_YELLOW_FG "building ..." COLOR_END, "build exited normally" COLOR_END "\n", "❌ build failed!" COLOR_END "\n"}
+#define DISP_LOAD arrs3{BRIGHT_YELLOW_FG "Running ...", "binary exited normally" COLOR_END "\n", "❌ failed to load binary!"  COLOR_END "\n"}
+
 
 
 //Frames

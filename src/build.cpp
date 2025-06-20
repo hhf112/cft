@@ -33,7 +33,7 @@ std::optional<buildErr> Tester::build() {
   }
 
   if (WIFEXITED(status))
-    std::cerr << "exit status: " << WEXITSTATUS(status) <<  '\n';
+    std::cerr << BRIGHT_YELLOW_FG << "build exit status: " <<  WEXITSTATUS(status) << COLOR_END << '\n';
   else {
     std::cerr << "build: unknown error occured\n" << '\n';
     return buildErr::PROCESSING_ERR;
