@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
 
   Parse inputTokens(argc, argv);
 
-  switch (inputTokens.whichAction()) {
+  switch (inputTokens.m_whichAction()) {
     case query::JUDGE: {
       Tester cftester(argc, argv, curdir);
 
