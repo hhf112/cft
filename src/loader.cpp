@@ -1,21 +1,14 @@
-#include <bits/types/struct_timeval.h>
-#include <fcntl.h>   // for open()
-#include <signal.h>  // for kill(), signal macros
-#include <signal.h>  // for sigevent
-#include <spawn.h>   // for posix
-#include <sys/select.h>
+#include <fcntl.h>         // for open()
+#include <spawn.h>         // for posix
 #include <sys/sendfile.h>  // for sendfile()
-#include <sys/time.h>      // for setitimer
 #include <sys/types.h>     // for types
 #include <sys/wait.h>      // for wait
-#include <time.h>          // for create_timer
 #include <unistd.h>        // for pipe()
 
 #include <chrono>   // for std::chrono
 #include <csignal>  // for std::signal
 #include <cstdio>   // for perror()
-#include <cstdlib>
-#include <ctime>
+#include <cstring>
 #include <iostream>  // for std::cerr
 #include <optional>  // for std::optional
 #include <string>    // for std::string
@@ -27,7 +20,11 @@
 #define OUTPUT_FILE "output.txt"
 
 int bin_id;
-void handler(int sig_id) { kill(bin_id, SIGKILL); }
+void handler(int sig_id) {
+  std::cerr << BRIGHT_YELLOW_FG << "IDLENESS TIME LIMIT EXCEEDED!" << COLOR_END
+            << '\n';
+  kill(bin_id, SIGKILL);
+}
 
 std::optional<status> Tester::load_bin() {
   int wstatus = 0;
@@ -36,14 +33,14 @@ std::optional<status> Tester::load_bin() {
 
   if (WIFSIGNALED(wstatus)) {
     m_loaded = -1;
-    std::cerr << "loader: child terminated by signal " << WTERMSIG(wstatus)
-              << '\n';
+    std::cerr << RED_FG << "child terminated by signal "
+              << strsignal(WTERMSIG(wstatus)) << COLOR_END << '\n';
     return status::RUNTIME_ERR;
   }
   if (WIFSTOPPED(wstatus)) {
     m_loaded = -1;
-    std::cerr << "loader: child stopped by signal " << WSTOPSIG(wstatus)
-              << '\n';
+    std::cerr << RED_FG << "child stopped by signal "
+              << strsignal(WSTOPSIG(wstatus)) << COLOR_END << '\n';
     return status::RUNTIME_ERR;
   }
   m_loaded = 1;
@@ -80,18 +77,22 @@ std::optional<status> Tester::run_bin(int& wstatus) {
 
   posix_spawn_file_actions_t actions;
   if (posix_spawn_file_actions_init(&actions) != 0) {
-    close_pipe(pipe_fd); close(input_fd); close(output_fd);
+    close_pipe(pipe_fd);
+    close(input_fd);
+    close(output_fd);
     perror("loader: file_actions_init failed");
     return status::PROCESSING_ERR;
   }
 
   auto cleanup = [&]() {
     m_loaded = 1;
-    close(pipe_fd[1]); close(input_fd); close(output_fd);
+    close(pipe_fd[1]);
+    close(input_fd);
+    close(output_fd);
     posix_spawn_file_actions_destroy(&actions);
   };
 
-  if (posix_spawn_file_actions_adddup2(&actions, pipe_fd[1], STDIN_FILENO) !=
+  if (posix_spawn_file_actions_adddup2(&actions, pipe_fd[0], STDIN_FILENO) !=
           0 ||
       posix_spawn_file_actions_adddup2(&actions, output_fd, STDOUT_FILENO) !=
           0) {
@@ -110,8 +111,11 @@ std::optional<status> Tester::run_bin(int& wstatus) {
     return m_result = status::PROCESSING_ERR;
   }
   close(pipe_fd[0]);
+
+  // idleness
   alarm(IDLE_LIMIT.count());
   signal(SIGALRM, handler);
+
   if (splice(input_fd, NULL, pipe_fd[1], NULL, SIZE_MAX, 0) == -1) {
     cleanup();
     perror("loader: splice failed");
@@ -119,7 +123,7 @@ std::optional<status> Tester::run_bin(int& wstatus) {
     waitpid(bin_id, nullptr, WNOHANG);
     return status::PROCESSING_ERR;
   }
-  close(pipe_fd[1]);
+
   if (waitpid(bin_id, &wstatus, 0) < 0) {
     perror("wait failed");
     m_loaded = -1;
@@ -127,9 +131,7 @@ std::optional<status> Tester::run_bin(int& wstatus) {
   }
 
   auto end = std::chrono::high_resolution_clock::now();
-  close(input_fd);
-  close(output_fd);
-  posix_spawn_file_actions_destroy(&actions);
+  cleanup();
   m_runtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                   .count();
 
