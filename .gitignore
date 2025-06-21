@@ -3,3 +3,4 @@ main.o
 testing/
 util/misc.o
 build/
+.cache
