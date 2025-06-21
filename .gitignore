@@ -2,3 +2,4 @@ src/*.o
 main.o
 testing/
 util/misc.o
+build/

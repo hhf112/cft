@@ -2,7 +2,8 @@
 #include <iostream>  // for std::cerr
 #include <optional>  // for std::optional
 
-#include "../tools/Tester.hpp"
+#include "cft/tester.hpp"
+#include "cft/util.hpp"
 
 int Tester::judge() {
   std::ofstream report{"report.txt", std::ios::out};

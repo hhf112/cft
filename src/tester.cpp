@@ -1,4 +1,4 @@
-#include "../tools/Tester.hpp"
+#include "cft/tester.hpp"
 
 #include <spawn.h>      // for posix
 #include <sys/types.h>  // for types
@@ -13,7 +13,7 @@
 #include <string>    // for std::string
 #include <thread>    // for std::thread
 
-#include "../util/include.hpp"
+#include "cft/util.hpp"
 
 //
 Tester::Tester(int argc, char* argv[], std::string& cwd)
@@ -57,8 +57,8 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
 
 std::optional<buildErr> Tester::build() {
   std::string sourcefile = m_filename + ".cpp";
-  char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-std=c++23", (char*)"-o",
-                  (char*)m_filename.c_str(), NULL};
+  char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-std=c++23",
+                  (char*)"-o",  (char*)m_filename.c_str(), NULL};
   pid_t build_id;
   if (posix_spawnp(&build_id, "g++", NULL, NULL, args, environ) != 0) {
     perror("build: posix failed");

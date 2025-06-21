@@ -5,9 +5,8 @@
 #include <iostream>    // for std::cerr
 #include <thread>      // for std::thread
 
-#include "./tools/include.hpp"
-#include "./util/include.hpp"
-#include "./tools/Tester.hpp"
+#include "cft/cft.hpp"
+
 
 int main(int argc, char* argv[]) {
   std::string curdir = std::filesystem::current_path().string();

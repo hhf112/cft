@@ -13,8 +13,8 @@
 #include <optional>  // for std::optional
 #include <string>    // for std::string
 
-#include "../tools/Tester.hpp"
-#include "../util/include.hpp"
+#include "cft/tester.hpp"
+#include "cft/util.hpp"
 
 // right now as macros. configuration will be added.
 #define INPUT_FILE "input.txt"

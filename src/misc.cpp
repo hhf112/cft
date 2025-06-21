@@ -9,7 +9,7 @@
 #include <thread>
 #include <vector>
 
-#include "./colors.hpp"
+#include "cft/colors.hpp"
 
 std::string lowerCase(std::string& s) {
   std::string lower{};

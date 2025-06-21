@@ -1,7 +1,7 @@
 #pragma once
 #include <string> // for std::string
 //
-#include "../util/include.hpp"
+#include "util.hpp"
 
 class Init {
  private:

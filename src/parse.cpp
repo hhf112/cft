@@ -1,4 +1,5 @@
-#include "../tools/Parse.hpp"
+#include "cft/parse.hpp"
+#include "cft/util.hpp"
 
 #include <iostream>  // for std::cerr
 #include <optional>  // for std::optional

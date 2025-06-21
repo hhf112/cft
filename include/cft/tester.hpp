@@ -2,7 +2,8 @@
 #include <optional>  // for std::optional
 #include <string>    // for std::string
 
-#include "../util/include.hpp"
+#include "cft/enums.hpp"
+
 #define TIME_LIMIT std::chrono::milliseconds(50)
 #define IDLE_LIMIT std::chrono::seconds(4)
 #define POLLING_RATE std::chrono::milliseconds(15)
