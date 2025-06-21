@@ -20,7 +20,7 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
     : m_filename{std::move(cwd)} {
   m_filename += '/';
   m_filename += argv[1];
-  m_lpTestcase = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
+  m_lines_ptc = (argc > 2 ? std::max(std::stoi(argv[2]), 1) : 1);
 
   if (m_isbuild) {
     int buildFinish = 0;
@@ -99,19 +99,20 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
   FileIterator output{"out.txt"};
   FileIterator actualOutput{"output.txt"};
 
-  std::string compare;
-  std::string actual;
+  std::string compare, actual;
+  int testcnt = 0,  linecnt = 0;
   std::cerr << BRIGHT_YELLOW_FG << "Judging...📜" << COLOR_END << '\n';
   while (output.fetchNext(compare)) {
     if (!actualOutput.fetchNext(actual)) {
       return m_result = status::WRONG_OUTPUT;
     }
-    if (m_isFullTest()) {
-      ++m_testcnt;
-      report << "test " << m_testcnt << '\n';
+    ++linecnt;
+    if (m_lines_ptc % linecnt == 0) {
+      ++testcnt;
+      report << "test " << testcnt << '\n';
       report << compare << '\n';
       report << "->\n" << actual << "\n\n";
-      std::cerr << "test " << m_testcnt << ": ";
+      std::cerr << "test " << testcnt << ": ";
       if (compare != actual) {
         m_result = status::WA;
         m_failcnt++;
@@ -122,7 +123,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
       }
     }
   }
-  if (!m_cnt) {
+  if (!linecnt) {
     return m_result = status::NILIO;
   }
   if (actualOutput.fetchNext(actual)) {

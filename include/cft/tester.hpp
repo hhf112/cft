@@ -12,18 +12,15 @@ class Tester {
  private:
   std::optional<std::string> m_ship = "/mnt/d/";
   std::string m_filename;
-  int m_lpTestcase = 1;
-  int m_cnt = 0;
-  int m_failcnt = 0;
-  int m_testcnt = 0;
+  int m_lines_ptc = 1;
   int m_loaded = 0;
+  int m_failcnt = 0;
   std::optional<int> m_runtime;
   bool m_isbuild = 1;
 
   status m_result = status::UNKNOWN;
   warning m_timeLimit = warning::GOOD;
 
-  bool m_isFullTest() { return ++m_cnt % m_lpTestcase == 0; }
   std::optional<status> m_run_bin(int& wstatus);
 
  public:
