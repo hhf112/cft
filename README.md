@@ -1,7 +1,7 @@
 
 Occasional updates for features. <br>
 
-- [x] Automated test case fetching orchestration. (to add binary instead)
+- [x] working on custom implementation of server for binary size optimization
 - [ ] Configurability.
 - [x] build and run tests
 
