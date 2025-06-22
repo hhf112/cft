@@ -1,5 +1,5 @@
 //ansi color macros.
-#pragma oncecolors
+#pragma once
 
 #define COLOR_END "\033[0m"
 
