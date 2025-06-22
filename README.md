@@ -10,7 +10,7 @@ Occasional updates for features. <br>
 
 ## Installation
 for bash simply run 
-```
+```bash
 curl -sSL  https://raw.githubusercontent.com/hhf112/cft/refs/heads/master/install.sh | bash
 ```
 
