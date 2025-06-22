@@ -9,6 +9,10 @@ Occasional updates for features. <br>
 .cpp file workflow for running I/O tests focused towards CP. 
 
 ## Installation
+for bash simply run 
+```
+curl -sSL  https://raw.githubusercontent.com/hhf112/cft/refs/heads/master/install.sh | bash
+```
 
 ## Usage 
 ```
