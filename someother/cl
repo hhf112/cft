@@ -1,0 +1,1 @@
+rm input.txt out.txt output.txt report.txt cl a.cpp a > /dev/null 2>&1

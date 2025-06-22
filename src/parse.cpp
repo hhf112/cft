@@ -18,7 +18,7 @@ Parse::Parse(int argc, char* argv[]) {
                      "time.\n";
         exit(1);
       }
-      if (m_decode(num, 2) != query::INIT) {
+      if (m_decode(argv[2], 2) != query::INIT) {
         std::cerr << "parse: Invalid count of files to be generated.\n\t";
         std::cerr << "Possible count must lie within the positive range of a "
                      "positive 32 bit integer\n";

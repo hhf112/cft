@@ -3,12 +3,22 @@
 #include <filesystem>  // for std::filesystem
 #include <functional>  // std::functional
 #include <iostream>    // for std::cerr
-#include <thread>      // for std::thread
+#include <thread>  // for std::thread
 
-#include "cft/cft.hpp"
+#include "cft/init.hpp"
+#include "cft/parse.hpp"
+#include "cft/tester.hpp"
 
+void serve() {
+  std::filesystem::path binary_path =
+      std::filesystem::canonical("/proc/self/exe").parent_path();  
+  std::string serv =
+      "node " + binary_path.string() + "/../server/server.js >/dev/null 2>&1 &";
+  std::system(serv.data());
+}
 
 int main(int argc, char* argv[]) {
+  serve();
   std::string curdir = std::filesystem::current_path().string();
 
   Parse inputTokens(argc, argv);

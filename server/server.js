@@ -3,20 +3,15 @@ import bodyParser from "body-parser";
 import fs from "fs"
 import "dotenv/config"
 
-const port = process.env.PORT;
+const port = 27121
+console.log(port);
+
 
 const app = express();
 
 app.use(bodyParser.json());
 
 
-// if (process.argv.length != 4) {
-//   console.log("wrong usage.")
-//   process.exit(1)
-// }
-//
-// const [input, output] = [process[2], process[3]]
-//
 const input = "input.txt"
 const output = "out.txt"
 
@@ -29,20 +24,15 @@ app.post('/', (req, res) => {
 
   data.tests.forEach((tes) => {
     inpStream.write(tes.input);
-    inpStream.write(tes.output);
+    outpStream.write(tes.output);
   })
 
   console.log("test files updated.")
   res.sendStatus(200);
 });
 
-app.listen(port, err => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-
-  console.log(`Listening on port ${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on 0.0.0.0:${port}`);
 });
 
 
