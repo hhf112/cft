@@ -1,7 +1,7 @@
 
 Occasional updates for features. <br>
 
-- [ ] Automated test case fetching orchestration.
+- [x] Automated test case fetching orchestration. (to add binary instead)
 - [ ] Configurability.
 - [x] build and run tests
 
