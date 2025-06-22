@@ -1,7 +1,7 @@
 
 Occasional updates for features. <br>
 
-- [x] working on custom implementation of server for binary size optimization
+- [x] Comeptitive Comapnion orchestration  
 - [ ] Configurability.
 - [x] build and run tests
 
