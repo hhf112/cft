@@ -42,7 +42,7 @@ int main() {
   });
 
   svr.listen("0.0.0.0", 27121);
-  logs << "server stopped\n";
+  logs << "port already in use, enjoy :)\n";
   logs.flush();
   return 0;
 }

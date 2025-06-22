@@ -17,9 +17,11 @@ init [n]            touch input.txt
                     touch out.txt in
                     touch output.txt
                     touch report.txt
+                    ./cpmp
+                    touch logs.txt
                     create cl 
                     create [n] ./[a-zA-Z].cpp template(s) 
-                    default n = 1
+                    {default n = 1}
 
 <name>              build ./<name>.cpp
                     run tests -> ./<name>.cpp
@@ -31,6 +33,10 @@ init [n]            touch input.txt
 
 #### OR
 2. Clone the repo, cd into it and run `make`
+
+#### external dependencies: (could implement custom http server handling for optimizing binary size)
+- https://github.com/nlohmann/json
+- https://github.com/yhirose/cpp-httplib
 #### build dependencies:
 - c++20
 - g++
