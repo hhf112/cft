@@ -1,10 +1,13 @@
+#include <fcntl.h>
 #include <spawn.h>
 #include <sys/wait.h>
 #include <unistd.h>  // for types
 
 #include <csignal>
+#include <cstdlib>
 #include <filesystem>  // for std::filesystem
 #include <iostream>    // for std::cerr
+#include <system_error>
 #include <thread>      // for std::thread
 
 #include "cft/init.hpp"
@@ -13,29 +16,11 @@
 
 pid_t server_id;
 void serve() {
-  std::string server_path =
+  std::string run_cmd =
       std::filesystem::canonical("/proc/self/exe").parent_path().string() +
-      "/server";
+      "/cpcmp &";
 
-  std::fstream serverLogs{"server.logs", std::ios::out};
-  if (!serverLogs) {
-    std::cerr << "server failed: failed to create logs\n";
-    return;
-  }
-
-  char* argv[] = {server_path.data(), (char*)">/dev/null", (char*)"2>&1",
-                  (char*)"&", nullptr};
-  if (posix_spawn(&server_id, (char*)server_path.data(), NULL, NULL, argv,
-                  NULL) != 0) {
-    perror("server: server failed");
-    return;
-  }
-
-  int wstatus;
-  if (waitpid(server_id, &wstatus, WNOHANG) < 0) {
-    perror("server: wait failed");
-  }
-  std::cerr << "server is running\n";
+    std::system(run_cmd.data());
 }
 
 void endserver(int sig_id) {

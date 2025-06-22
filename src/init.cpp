@@ -8,7 +8,7 @@
 
 Init::Init(int argc, char *argv[]) {
   std::cout << "Flushing / creating IO files ...\n";
-  if (!std::ofstream{"input.txt", std::ios::out} ||
+  if (!std::ofstream{"in.txt", std::ios::out} ||
       !std::ofstream{"output.txt", std::ios::out} ||
       !std::ofstream{"out.txt", std::ios::out} ||
       !std::ofstream{"report.txt", std::ios::out}) {
@@ -44,7 +44,7 @@ int Init::createFiles() {
     std::cerr << "createfiles: ERR: Failed to load template \n";
     return 1;
   }
-  cl << "rm input.txt out.txt output.txt report.txt cl ";
+  cl << "rm in.txt out.txt output.txt report.txt cl logs.txt";
   for (int i = 0; i < m_files; i++) {
     std::string fl;
     fl += (char)(i + 'a');
