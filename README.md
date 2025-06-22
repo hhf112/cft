@@ -8,6 +8,8 @@ Occasional updates for features. <br>
 # CFTester <img src ="https://img.shields.io/github/actions/workflow/status/hhf112/cft/c-cpp.yml" alt="build status">
 .cpp file workflow for running I/O tests focused towards CP. 
 
+## Installation
+
 ## Usage 
 ```
 usage: cft <command> [option]
