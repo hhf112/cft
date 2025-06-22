@@ -5,6 +5,13 @@
 
 int main() {
   httplib::Server svr;
+  svr.set_socket_options([](socket_t sock) {
+    int off = 0;
+#ifdef SO_REUSEPORT
+    ::setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, &off, sizeof(off));
+#endif
+  });
+
   std::fstream logs{"logs.txt", std::ios::out};
   if (!logs) {
     std::cerr << "unable to open log file\n";
@@ -35,5 +42,7 @@ int main() {
   });
 
   svr.listen("0.0.0.0", 27121);
+  logs << "server stopped\n";
+  logs.flush();
   return 0;
 }

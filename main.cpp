@@ -3,34 +3,44 @@
 #include <sys/wait.h>
 #include <unistd.h>  // for types
 
-#include <csignal>
 #include <cstdlib>
 #include <filesystem>  // for std::filesystem
 #include <iostream>    // for std::cerr
-#include <system_error>
 #include <thread>      // for std::thread
 
 #include "cft/init.hpp"
 #include "cft/parse.hpp"
 #include "cft/tester.hpp"
 
-pid_t server_id;
 void serve() {
   std::string run_cmd =
       std::filesystem::canonical("/proc/self/exe").parent_path().string() +
-      "/cpcmp &";
+      "/cpcmp";
+  std::cerr << "starting server...\n";
 
-    std::system(run_cmd.data());
-}
+  pid_t server_id;
+  char* args[] = {
+      (char*)run_cmd.c_str(),
+      (char*)">dev/null",
+      (char*)"2>&1",
+      (char*)"&",
+      nullptr,
+  };
 
-void endserver(int sig_id) {
-  std::cerr << "server killed\n";
-  kill(server_id, SIGKILL);
+  if (posix_spawn(&server_id, args[0], NULL, NULL, args, NULL) < 0) {
+    perror("posix_spawn failed");
+    return;
+  }
+
+  pid_t wstatus;
+  if (waitpid(server_id, &wstatus, 0) < 0) {
+    perror("wait on server failed");
+    return;
+  }
 }
 
 int main(int argc, char* argv[]) {
   serve();
-  signal(SIGINT, endserver);
   std::string curdir = std::filesystem::current_path().string();
 
   Parse inputTokens(argc, argv);
