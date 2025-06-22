@@ -14,6 +14,8 @@ add_executable(cft
   ${CMAKE_SOURCE_DIR}/main.cpp
   ${APP_SOURCES})
 
+add_executable(server ${CMAKE_SOURCE_DIR}/server.cpp)
 target_include_directories(cft PRIVATE ${CMAKE_SOURCE_DIR}/include/)
+target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include/)
 
 

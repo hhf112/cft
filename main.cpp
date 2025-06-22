@@ -1,24 +1,51 @@
+#include <spawn.h>
+#include <sys/wait.h>
 #include <unistd.h>  // for types
 
+#include <csignal>
 #include <filesystem>  // for std::filesystem
-#include <functional>  // std::functional
 #include <iostream>    // for std::cerr
-#include <thread>  // for std::thread
+#include <thread>      // for std::thread
 
 #include "cft/init.hpp"
 #include "cft/parse.hpp"
 #include "cft/tester.hpp"
 
+pid_t server_id;
 void serve() {
-  std::filesystem::path binary_path =
-      std::filesystem::canonical("/proc/self/exe").parent_path();  
-  std::string serv =
-      "node " + binary_path.string() + "/../server/server.js >/dev/null 2>&1 &";
-  std::system(serv.data());
+  std::string server_path =
+      std::filesystem::canonical("/proc/self/exe").parent_path().string() +
+      "/server";
+
+  std::fstream serverLogs{"server.logs", std::ios::out};
+  if (!serverLogs) {
+    std::cerr << "server failed: failed to create logs\n";
+    return;
+  }
+
+  char* argv[] = {server_path.data(), (char*)">/dev/null", (char*)"2>&1",
+                  (char*)"&", nullptr};
+  if (posix_spawn(&server_id, (char*)server_path.data(), NULL, NULL, argv,
+                  NULL) != 0) {
+    perror("server: server failed");
+    return;
+  }
+
+  int wstatus;
+  if (waitpid(server_id, &wstatus, WNOHANG) < 0) {
+    perror("server: wait failed");
+  }
+  std::cerr << "server is running\n";
+}
+
+void endserver(int sig_id) {
+  std::cerr << "server killed\n";
+  kill(server_id, SIGKILL);
 }
 
 int main(int argc, char* argv[]) {
   serve();
+  signal(SIGINT, endserver);
   std::string curdir = std::filesystem::current_path().string();
 
   Parse inputTokens(argc, argv);
