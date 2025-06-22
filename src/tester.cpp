@@ -108,7 +108,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
       return m_result = status::WRONG_OUTPUT;
     }
     ++linecnt;
-    if (m_lines_ptc % linecnt == 0) {
+    if (linecnt % m_lines_ptc == 0) {
       ++testcnt;
       report << "test " << testcnt << '\n';
       report << compare << '\n';

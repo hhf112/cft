@@ -17,7 +17,7 @@
 #include "cft/util.hpp"
 
 // right now as macros. configuration will be added.
-#define INPUT_FILE "input.txt"
+#define INPUT_FILE "in.txt"
 #define OUTPUT_FILE "output.txt"
 
 int bin_id;
