@@ -1,4 +1,3 @@
-#include "util.hpp"
+class cfg {
 
-class Config {
 };

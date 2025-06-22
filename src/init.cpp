@@ -1,5 +1,4 @@
 #include "cft/init.hpp"
-#include "cft/util.hpp"
 
 #include <filesystem>  // for std::filesystem
 #include <fstream>     // for fstream

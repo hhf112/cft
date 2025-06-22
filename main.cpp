@@ -33,7 +33,7 @@ void serve() {
   }
 
   pid_t wstatus;
-  if (waitpid(server_id, &wstatus, 0) < 0) {
+  if (waitpid(server_id, &wstatus, WNOHANG) < 0) {
     perror("wait on server failed");
     return;
   }

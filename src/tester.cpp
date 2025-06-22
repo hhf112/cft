@@ -7,7 +7,6 @@
 
 #include <cstdio>    // for perror
 #include <cstdlib>   // for exit()
-#include <filesystem>
 #include <fstream>   // for fstream
 #include <iostream>  // for std::cerr
 #include <optional>  // for std::optional
