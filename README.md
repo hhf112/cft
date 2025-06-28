@@ -1,6 +1,7 @@
 
 Occasional updates for features. <br>
 
+- [ ] custom http implementation for lightweight binary
 - [x] Comeptitive Comapnion orchestration  
 - [ ] Configurability.
 - [x] build and run tests
@@ -9,7 +10,7 @@ Occasional updates for features. <br>
 .cpp file workflow for running I/O tests focused towards CP. 
 
 ## Installation
-for bash simply run 
+bash
 ```bash
 curl -sSL  https://raw.githubusercontent.com/hhf112/cft/refs/heads/master/install.sh | bash
 ```
@@ -19,30 +20,20 @@ curl -sSL  https://raw.githubusercontent.com/hhf112/cft/refs/heads/master/instal
 usage: cft <command> [option]
 
 <command>:
-init [n]            touch input.txt
+init [n]            touch in.txt
                     touch out.txt in
                     touch output.txt
                     touch report.txt
                     ./cpmp
-                    touch logs.txt
                     create cl 
                     create [n] ./[a-zA-Z].cpp template(s) 
                     {default n = 1}
 
-<name>              build ./<name>.cpp
-                    run tests -> ./<name>.cpp
-                    logs: terminal and report.txt
+<name>              g++  ./<name>.cpp -o <name>
+                    ./<name>.cpp
 ```
 
-## Installation
-1. Download the prebuilt binary in `app/` directory and add it to your path.
 
-#### OR
-2. Clone the repo, cd into it and run `make`
-
-#### external dependencies: (could implement custom http server handling for optimizing binary size)
-- https://github.com/nlohmann/json
-- https://github.com/yhirose/cpp-httplib
 #### build dependencies:
 - c++20
 - g++
