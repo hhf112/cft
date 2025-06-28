@@ -7,7 +7,6 @@
 
 #include <cstdio>    // for perror
 #include <cstdlib>   // for exit()
-#include <filesystem>
 #include <fstream>   // for fstream
 #include <iostream>  // for std::cerr
 #include <optional>  // for std::optional
@@ -57,42 +56,64 @@ Tester::Tester(int argc, char* argv[], std::string& cwd)
 }
 
 std::optional<buildErr> Tester::build() {
-  std::string sourcefile = m_filename + ".cpp";
-  char* args[] = {(char*)"g++", (char*)sourcefile.c_str(), (char*)"-std=c++23",
-                  (char*)"-o",  (char*)m_filename.c_str(), NULL};
-  pid_t build_id;
-  if (posix_spawnp(&build_id, "g++", NULL, NULL, args, environ) != 0) {
-    perror("build: posix failed");
-    return buildErr::PROCESSING_ERR;
-  }
-  int status;
-  if (waitpid(build_id, &status, 0) < 0) {
-    perror("build: wait failed");
-    return buildErr::PROCESSING_ERR;
-  }
+    std::string sourcefile = m_filename + ".cpp";
 
-  if (WIFEXITED(status))
-    std::cerr << BRIGHT_YELLOW_FG
-              << "build exit status: " << WEXITSTATUS(status) << COLOR_END
-              << '\n';
-  else {
-    std::cerr << "build: unknown error occured\n" << '\n';
-    return buildErr::PROCESSING_ERR;
-  }
 
-  if (m_ship) {
-    std::fstream readsrc{sourcefile, std::ios::in};
-    std::fstream cp{m_ship.value() + "ship.cpp", std::ios::out};
+    char* args[] = {
+        // CMD 
+        (char*)"g++",  
 
-    if (!readsrc || !cp)
-      std::cerr << "Unable to ship!\n";
-    else {
-      cp << readsrc.rdbuf();
-      std::cerr << GREEN_FG << "\t shipped!\n";
+        // PATH
+        (char*)sourcefile.c_str(),
+
+        // PRE FLAGS
+        (char*)"-std=c++23",
+
+        //
+
+        (char*)"-o",
+        (char*)m_filename.c_str(),
+
+        // POST FLAGS 
+
+        //
+
+        nullptr
+    };
+
+    pid_t build_id;
+    if (posix_spawnp(&build_id, "g++", NULL, NULL, args, environ) != 0) {
+        perror("build: posix failed");
+        return buildErr::PROCESSING_ERR;
     }
-  }
+    int status;
+    if (waitpid(build_id, &status, 0) < 0) {
+        perror("build: wait failed");
+        return buildErr::PROCESSING_ERR;
+    }
 
-  return {};
+    if (WIFEXITED(status))
+        std::cerr << BRIGHT_YELLOW_FG
+            << "build exit status: " << WEXITSTATUS(status) << COLOR_END
+            << '\n';
+    else {
+        std::cerr << "build: unknown error occured\n" << '\n';
+        return buildErr::PROCESSING_ERR;
+    }
+
+    if (m_ship) {
+        std::fstream readsrc{sourcefile, std::ios::in};
+        std::fstream cp{m_ship.value() + "ship.cpp", std::ios::out};
+
+        if (!readsrc || !cp)
+            std::cerr << "Unable to ship!\n";
+        else {
+            cp << readsrc.rdbuf();
+            std::cerr << GREEN_FG << "\t shipped!\n";
+        }
+    }
+
+    return {};
 }
 
 std::optional<status> Tester::runTests(std::ofstream& report) {

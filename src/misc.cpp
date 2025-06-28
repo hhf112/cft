@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "cft/colors.hpp"
+#include "cft/util.hpp"
 
 std::string lowerCase(std::string& s) {
   std::string lower{};
@@ -26,7 +27,7 @@ void spinnerBool(std::array<std::string, 3>& display,
     std::cerr << BRIGHT_YELLOW_FG << display[0] << frames[i % frm]
               << '\r';
     i++;
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   if (done > 0)
