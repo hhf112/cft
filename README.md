@@ -2,6 +2,7 @@
 Occasional updates for features. <br>
 
 - [ ] custom http implementation for lightweight binary
+- [ ] custom json parser for lightweight binary
 - [x] Comeptitive Comapnion orchestration  
 - [ ] Configurability.
 - [x] build and run tests
