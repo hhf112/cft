@@ -39,4 +39,6 @@ init [n]            touch in.txt
 - c++20
 - g++
 - [competitive comapnion](https://github.com/jmerle/competitive-companion#)
+- [nlohmann-json](https://github.com/nlohmann/json) 
+- [http-lib](https://github.com/yhirose/cpp-httplib)
 
