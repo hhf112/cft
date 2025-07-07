@@ -25,7 +25,7 @@ init [n]            touch in.txt
                     touch out.txt in
                     touch output.txt
                     touch report.txt
-                    ./cpmp
+                    ./cpmp [start competitive companion server]
                     create cl 
                     create [n] ./[a-zA-Z].cpp template(s) 
                     {default n = 1}
@@ -38,4 +38,5 @@ init [n]            touch in.txt
 #### build dependencies:
 - c++20
 - g++
+- [competitive comapnion](https://github.com/jmerle/competitive-companion#)
 
