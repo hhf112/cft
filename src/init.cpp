@@ -43,7 +43,7 @@ int Init::createFiles() {
     std::cerr << "createfiles: ERR: Failed to load template \n";
     return 1;
   }
-  cl << "rm in.txt out.txt output.txt report.txt cl logs.txt";
+  cl << "rm in.txt out.txt output.txt report.txt cl logs.txt ";
   for (int i = 0; i < m_files; i++) {
     std::string fl;
     fl += (char)(i + 'a');

@@ -3,6 +3,7 @@
 #include <string>    // for std::string
 
 #include "cft/enums.hpp"
+#include "cft/config.hpp"
 
 #define TIME_LIMIT std::chrono::milliseconds(50)
 #define IDLE_LIMIT std::chrono::seconds(4)
