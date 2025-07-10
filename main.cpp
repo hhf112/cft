@@ -15,28 +15,9 @@
 void serve() {
   std::string run_cmd =
       std::filesystem::canonical("/proc/self/exe").parent_path().string() +
-      "/cpcmp";
+      "/cpcmp >/dev/null 2>&1 &";
   std::cerr << "starting server...\n";
-
-  pid_t server_id;
-  char* args[] = {
-      (char*)run_cmd.c_str(),
-      (char*)">dev/null",
-      (char*)"2>&1",
-      (char*)"&",
-      nullptr,
-  };
-
-  if (posix_spawn(&server_id, args[0], NULL, NULL, args, NULL) < 0) {
-    perror("posix_spawn failed");
-    return;
-  }
-
-  pid_t wstatus;
-  if (waitpid(server_id, &wstatus, 0) < 0) {
-    perror("wait on server failed");
-    return;
-  }
+  std::system(run_cmd.c_str());
 }
 
 int main(int argc, char* argv[]) {
