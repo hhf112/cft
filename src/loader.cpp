@@ -1,17 +1,17 @@
-#include <fcntl.h>         // for open()
-#include <spawn.h>         // for posix
-#include <sys/sendfile.h>  // for sendfile()
-#include <sys/types.h>     // for types
-#include <sys/wait.h>      // for wait
-#include <unistd.h>        // for pipe()
+#include <fcntl.h>         //  open()
+#include <spawn.h>         //  posix
+#include <sys/sendfile.h>  //  sendfile()
+#include <sys/types.h>     //  types
+#include <sys/wait.h>      //  wait
+#include <unistd.h>        //  pipe()
 
-#include <chrono>    // for std::chrono
-#include <csignal>   // for std::signal
-#include <cstdio>    // for perror()
-#include <cstring>   // for strsignal
-#include <iostream>  // for std::cerr
-#include <optional>  // for std::optional
-#include <string>    // for std::string
+#include <chrono>    //  std::chrono
+#include <csignal>   //  std::signal
+#include <cstdio>    //  perror()
+#include <cstring>   //  strsignal
+#include <iostream>  //  std::cerr
+#include <optional>  //  std::optional
+#include <string>    //  std::string
 
 #include "cft/tester.hpp"
 #include "cft/util.hpp"

@@ -1,17 +1,17 @@
 #include "cft/tester.hpp"
 
-#include <spawn.h>      // for posix
-#include <sys/types.h>  // for types
-#include <sys/wait.h>   // for waitpid
-#include <unistd.h>     // for types
+#include <spawn.h>      //  posix
+#include <sys/types.h>  //  types
+#include <sys/wait.h>   //  waitpid
+#include <unistd.h>     //  types
 
-#include <cstdio>    // for perror
-#include <cstdlib>   // for exit()
-#include <fstream>   // for fstream
-#include <iostream>  // for std::cerr
-#include <optional>  // for std::optional
-#include <string>    // for std::string
-#include <thread>    // for std::thread
+#include <cstdio>    //  perror
+#include <cstdlib>   //  exit()
+#include <fstream>   //  fstream
+#include <iostream>  //  std::cerr
+#include <optional>  //  std::optional
+#include <string>    //  std::string
+#include <thread>    //  std::thread
 
 #include "cft/util.hpp"
 
@@ -100,7 +100,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
   FileIterator actualOutput{"output.txt"};
 
   std::string compare, actual;
-  int testcnt = 0,  linecnt = 0;
+  int testcnt = 0, linecnt = 0;
   std::cerr << BRIGHT_YELLOW_FG << "Judging...📜" << COLOR_END << '\n';
   while (output.fetchNext(compare)) {
     if (!actualOutput.fetchNext(actual)) {

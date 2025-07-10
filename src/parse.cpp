@@ -1,9 +1,9 @@
 #include "cft/parse.hpp"
 #include "cft/util.hpp"
 
-#include <iostream>  // for std::cerr
-#include <optional>  // for std::optional
-#include <string>    // for std::string
+#include <iostream>  //  std::cerr
+#include <optional>  //  std::optional
+#include <string>    //  std::string
 
 Parse::Parse(int argc, char* argv[]) {
   argc--;

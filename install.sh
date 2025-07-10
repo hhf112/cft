@@ -1,27 +1,30 @@
 #!/bin/bash
-echo "Thank you for installing cft!" && 
-sudo mkdir /usr/local/cft && 
-cd /usr/local/cft && 
+RELEASE="https://github.com/hhf112/cft/releases/download/stable-test"
+INSTALL_DIR="/usr/local/cft"
 
+echo "Thank you for installing cft!" && 
+sudo mkdir "$INSTALL_DIR" && 
+cd "$INSTALL_DIR" && 
+
+# TEMPLATE
 echo "downloading files ..." && 
-curl -s -L -O https://github.com/hhf112/cft/releases/download/stable-test/template.cpp &&
+curl -s -L -O "$RELEASE/template.cpp" &&
 
 chmod u+r $PWD/template.cpp &&
 
-echo "installing files ... " && 
-sudo mkdir /usr/local/cft/bin &&
-cd /usr/local/cft/bin &&
-
+# BIN
+sudo mkdir "$INSTALL_DIR/bin" &&
+cd $INSTALL_DIR/bin &&
 echo "downloading files ... " && 
-curl -s -L -O https://github.com/hhf112/cft/releases/download/stable-test/cft &&
-curl -s -L -O https://github.com/hhf112/cft/releases/download/stable-test/cpcmp &&
+curl -s -L -O "$RELEASE/cft" &&
+curl -s -L -O "$RELEASE/cpcmp" &&
 
 echo "installing files ... " && 
 chmod o+x $PWD/cft &&
 chmod o+x $PWD/cpcmp &&
 
-sudo ln -sf $PWD/cft /usr/local/bin/cft &&
-sudo ln -sf $PWD/cpcmp /usr/local/bin/cpcmp &&
+sudo ln -sf $PWD/cft $INSTALL_DIR/cft &&
+sudo ln -sf $PWD/cpcmp $INSTALL_DIR/cpcmp &&
 
 echo "
 	  ██████╗███████╗████████╗███████╗███████╗████████╗███████╗██████╗      ██╗ ██╗ 

@@ -1,9 +1,9 @@
 #pragma once
-#include <optional>  // for std::optional
-#include <string>    // for std::string
+#include <optional>  //  std::optional
+#include <string>    //  std::string
 
-#include "cft/enums.hpp"
 #include "cft/config.hpp"
+#include "cft/enums.hpp"
 
 #define TIME_LIMIT std::chrono::milliseconds(50)
 #define IDLE_LIMIT std::chrono::seconds(4)

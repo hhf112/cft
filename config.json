@@ -1,3 +1,4 @@
 {
-
+  "TIME_LIMIT":  2,
+  "IDLE_LIMIT": 3
 }

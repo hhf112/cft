@@ -1,9 +1,9 @@
 #pragma once
 
-#include <algorithm>  // fro std::transform
+#include <algorithm>  //  std::transform
 #include <iterator>   // std::back_inserter
-#include <optional>   // for std::optional
-#include <string>     // for std::string
+#include <optional>   //  std::optional
+#include <string>     //  std::string
 
 #include "util.hpp"
 

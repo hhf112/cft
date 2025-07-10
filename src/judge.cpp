@@ -1,6 +1,6 @@
-#include <fstream>   // for std::fstream
-#include <iostream>  // for std::cerr
-#include <optional>  // for std::optional
+#include <fstream>   //  std::fstream
+#include <iostream>  //  std::cerr
+#include <optional>  //  std::optional
 
 #include "cft/tester.hpp"
 #include "cft/util.hpp"

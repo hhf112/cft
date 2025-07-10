@@ -33,9 +33,8 @@ class cfg {
       REPORT_FILENAME = j["REPORT_FILENAME"];
     if (j["SHIP_FILENAME"].is_string()) SHIP_FILENAME = j["SHIP_FILENAME"];
   }
-private:
-  template<typename T>
-  T parse(std::string& inputStream){
 
-  }
+ private:
+  template <typename T>
+  T parse(std::string& inputStream) {}
 };
