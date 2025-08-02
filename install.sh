@@ -3,7 +3,7 @@ RELEASE="https://github.com/hhf112/cft/releases/download/stable-test"
 INSTALL_DIR="/usr/local/cft"
 
 echo "Thank you for installing cft!" && 
-sudo mkdir "$INSTALL_DIR" && 
+sudo mkdir -p "$INSTALL_DIR" && 
 cd "$INSTALL_DIR" && 
 
 # TEMPLATE
@@ -13,7 +13,7 @@ curl -s -L -O "$RELEASE/template.cpp" &&
 chmod u+r $PWD/template.cpp &&
 
 # BIN
-sudo mkdir "$INSTALL_DIR/bin" &&
+sudo mkdir -p "$INSTALL_DIR/bin" &&
 cd $INSTALL_DIR/bin &&
 echo "downloading files ... " && 
 curl -s -L -O "$RELEASE/cft" &&

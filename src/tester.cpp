@@ -12,7 +12,9 @@
 #include <optional>  //  std::optional
 #include <string>    //  std::string
 #include <thread>    //  std::thread
+#include <variant>
 
+#include "cft/colors.hpp"
 #include "cft/util.hpp"
 
 //
@@ -94,6 +96,13 @@ std::optional<buildErr> Tester::build() {
   return {};
 }
 
+
+std::string_view str_trim(std::string_view str) {
+    while (!str.empty() && str.front() == ' ') str.remove_prefix(1);
+    while (!str.empty() && str.back() == ' ') str.remove_suffix(1);
+    return str;
+}
+
 std::optional<status> Tester::runTests(std::ofstream& report) {
   if (!report || !m_loaded) return {};
   FileIterator output{"out.txt"};
@@ -113,7 +122,7 @@ std::optional<status> Tester::runTests(std::ofstream& report) {
       report << compare << '\n';
       report << "->\n" << actual << "\n\n";
       std::cerr << "test " << testcnt << ": ";
-      if (compare != actual) {
+      if (str_trim(compare) != str_trim(actual)) {
         m_result = status::WA;
         m_failcnt++;
         report << "FAILED\n\n";
